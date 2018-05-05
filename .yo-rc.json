@@ -1,0 +1,9 @@
+{
+  "generator-android-mvp-starter": {
+    "promptValues": {
+      "name": "Football Schedule",
+      "targetSdk": "27",
+      "minSdk": "21"
+    }
+  }
+}

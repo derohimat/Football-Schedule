@@ -1,0 +1,48 @@
+ext {
+    versions = [
+            support    : "27.1.1",
+            okHttp     : "3.8.1",
+            retrofit   : '2.3.0',
+            dagger     : '2.11',
+            butterKnife: '8.8.1',
+            leakcanary : '1.5.1',
+            rxKotlin   : '2.1.0',
+            rxAndroid  : '2.0.1',
+            sqlbrite   : '1.1.2',
+            timber     : '4.7.0',
+            stethOkhttp: '1.5.0',
+            multiDex   : '1.0.2'
+    ]
+
+    supportDeps = [
+            appcompatV7      : "com.android.support:appcompat-v7:$versions.support",
+            design           : "com.android.support:design:$versions.support",
+            recyclerView     : "com.android.support:recyclerview-v7:$versions.support",
+            supportAnnotation: "com.android.support:support-annotations:$versions.support",
+            multiDex         : "com.android.support:multidex:$versions.multiDex"
+    ]
+
+    rxJava = [
+            rxKotlin : "io.reactivex.rxjava2:rxkotlin:$versions.rxKotlin",
+            rxAndroid: "io.reactivex.rxjava2:rxandroid:$versions.rxAndroid"
+    ]
+
+    retrofit = [
+            retrofit     : "com.squareup.retrofit2:retrofit:$versions.retrofit",
+            rxAdapter    : "com.squareup.retrofit2:adapter-rxjava2:$versions.retrofit",
+            gsonConverter: "com.squareup.retrofit2:converter-gson:$versions.retrofit",
+            sqlbrite     : "com.squareup.sqlbrite:sqlbrite:$versions.sqlbrite"
+    ]
+
+    okHttp = [
+            logger: "com.squareup.okhttp3:logging-interceptor:$versions.okHttp",
+            okhttp: "com.squareup.okhttp3:okhttp:$versions.okHttp"
+    ]
+
+    supportLibs = supportDeps.values()
+    networkLibs = retrofit.values() + okHttp.values()
+    rxJavaLibs = rxJava.values()
+
+    leakCannary = "com.squareup.leakcanary:leakcanary-android:$versions.leakcanary"
+    daggerCompiler = "com.google.dagger:dagger-compiler:$versions.dagger"
+}

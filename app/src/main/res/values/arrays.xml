@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="top_league">
+        <item>English Premier League</item>
+        <item>Spanish La Liga</item>
+        <item>Italian Serie A</item>
+        <item>German Bundesliga</item>
+        <item>French Ligue 1</item>
+        <item>Dutch Eredivisie</item>
+        <item>American Major League Soccer</item>
+        <item>Portuguese Primeira Liga</item>
+    </string-array>
+</resources>

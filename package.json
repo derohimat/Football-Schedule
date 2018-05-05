@@ -1,0 +1,14 @@
+{
+  "name": "generator-android-mvp-kotlin-starter-dr",
+  "version": "0.0.1",
+  "description": "",
+  "files": [
+    "generators"
+  ],
+  "keywords": [
+    "yeoman-generator-android-mvp-kotlin-starter-dr"
+  ],
+  "dependencies": {
+    "yeoman-generator": "^1.0.0"
+  }
+}

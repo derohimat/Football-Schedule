@@ -13,10 +13,10 @@ edited from Android Starter with update and remove some dependency and files
 - [Timber](https://github.com/JakeWharton/timber)
 - [Glide 3](https://github.com/bumptech/glide)
 
-## Create new project using yeoman [generator-mvp-kotlin-starter-dr](https://github.com/derohimat/generator-mvp-kotlin-starter-dr)
+## Create new project using yeoman [generator-android-mvp-kotlin-starter-dr](https://github.com/derohimat/generator-android-mvp-kotlin-starter-dr)
 ```bash
 npm install -g yo
-npm install -g generator-mvp-kotlin-starter-dr
+npm install -g generator-android-mvp-kotlin-starter-dr
 mkdir NewApp && cd $_
 yo android-mvp-starter
 ```
