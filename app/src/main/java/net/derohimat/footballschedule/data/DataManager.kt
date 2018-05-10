@@ -2,10 +2,7 @@ package net.derohimat.footballschedule.data
 
 import io.reactivex.Observable
 import io.reactivex.Single
-import net.derohimat.footballschedule.data.model.EventMatchResponse
-import net.derohimat.footballschedule.data.model.League
-import net.derohimat.footballschedule.data.model.Team
-import net.derohimat.footballschedule.data.model.TeamResponse
+import net.derohimat.footballschedule.data.model.*
 import net.derohimat.footballschedule.data.remote.FootBallApi
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -37,6 +34,12 @@ constructor(private val mFootBallApi: FootBallApi) {
                 mFootBallApi.getNextMatch(leagueId)
             }
         }
+    }
+
+    fun getEventDetail(eventId: String): Observable<EventMatch> {
+        return mFootBallApi.getEventDetail(eventId)
+                .toObservable()
+                .map { t: EventMatchResponse -> t.events.first() }
     }
 
     fun getTeamDetail(teamId: String): Observable<Team> {

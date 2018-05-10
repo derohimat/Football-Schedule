@@ -12,7 +12,7 @@ import net.derohimat.footballschedule.data.model.EventMatch
 import javax.inject.Inject
 
 class EventAdapter @Inject
-constructor() : RecyclerView.Adapter<EventAdapter.TeamViewHolder>() {
+constructor() : RecyclerView.Adapter<EventAdapter.EventViewHolder>() {
 
     private var list: List<EventMatch>
     private var eventType: Int = 0
@@ -31,17 +31,17 @@ constructor() : RecyclerView.Adapter<EventAdapter.TeamViewHolder>() {
         mClickListener = clickListener
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TeamViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventViewHolder {
         val view = LayoutInflater
                 .from(parent.context)
                 .inflate(R.layout.item_event, parent, false)
-        return TeamViewHolder(view)
+        return EventViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: TeamViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: EventViewHolder, position: Int) {
         val eventMatch = list[position]
         holder.item = eventMatch
-        holder.txtDate?.text = eventMatch.eventDate
+        holder.txtDate?.text = eventMatch.dateEvent
         holder.txtTeamHome?.text = eventMatch.homeTeam
         holder.txtTeamAway?.text = eventMatch.awayTeam
 
@@ -65,7 +65,7 @@ constructor() : RecyclerView.Adapter<EventAdapter.TeamViewHolder>() {
         fun onTeamClick(teamId: String, teamName: String)
     }
 
-    inner class TeamViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class EventViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         lateinit var item: EventMatch
 
@@ -91,7 +91,7 @@ constructor() : RecyclerView.Adapter<EventAdapter.TeamViewHolder>() {
 
         init {
             ButterKnife.bind(this, itemView)
-            itemView.setOnClickListener { mClickListener.onTeamClick(item.eventId, item.eventName) }
+            itemView.setOnClickListener { mClickListener.onTeamClick(item.idEvent as String, item.event as String) }
         }
     }
 }

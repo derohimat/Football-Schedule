@@ -21,6 +21,9 @@ interface FootBallApi {
     @GET("eventsnextleague.php")
     fun getNextMatch(@Query("id") leagueId: String): Single<EventMatchResponse>
 
+    @GET("lookupevent.php")
+    fun getEventDetail(@Query("id") teamId: String): Single<EventMatchResponse>
+
     @GET("lookupteam.php")
     fun getTeamDetail(@Query("id") teamId: String): Single<TeamResponse>
 

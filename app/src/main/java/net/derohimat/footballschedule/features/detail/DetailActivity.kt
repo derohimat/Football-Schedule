@@ -5,16 +5,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.Toolbar
 import android.view.View
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import butterknife.BindView
 import net.derohimat.footballschedule.R
-import net.derohimat.footballschedule.data.model.Team
+import net.derohimat.footballschedule.data.model.EventMatch
 import net.derohimat.footballschedule.features.base.BaseActivity
 import net.derohimat.footballschedule.features.common.ErrorView
 import net.derohimat.footballschedule.features.detail.widget.DetailView
-import net.derohimat.footballschedule.util.loadImageFromUrl
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -27,10 +25,6 @@ class DetailActivity : BaseActivity(), DetailMvpView, ErrorView.ErrorListener {
     @JvmField
     var mErrorView: ErrorView? = null
 
-    @BindView(R.id.image_badge)
-    @JvmField
-    var mTeamBadge: ImageView? = null
-
     @BindView(R.id.progress)
     @JvmField
     var mProgress: ProgressBar? = null
@@ -39,47 +33,42 @@ class DetailActivity : BaseActivity(), DetailMvpView, ErrorView.ErrorListener {
     @JvmField
     var mToolbar: Toolbar? = null
 
-    @BindView(R.id.layout_detail)
-    @JvmField
-    var mStatLayout: LinearLayout? = null
-
     @BindView(R.id.layout_team)
     @JvmField
-    var mTeamLayout: View? = null
+    var mTeamLayout: LinearLayout? = null
 
-    private var mTeamId: String? = null
-    private var mTeamName: String? = null
+    private var mEventId: String? = null
+    private var mEventName: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityComponent().inject(this)
         mDetailPresenter.attachView(this)
 
-        mTeamId = intent.getStringExtra(EXTRA_TEAM_ID)
-        mTeamName = intent.getStringExtra(EXTRA_TEAM_NAME)
-        if (mTeamId == null) {
-            throw IllegalArgumentException("Detail Activity requires a team id")
+        mEventId = intent.getStringExtra(EXTRA_ID)
+        mEventName = intent.getStringExtra(EXTRA_NAME)
+        if (mEventId == null) {
+            throw IllegalArgumentException("Detail Activity requires a event id")
         }
 
         setSupportActionBar(mToolbar)
         val actionBar = supportActionBar
         actionBar?.setDisplayHomeAsUpEnabled(true)
-        title = mTeamName?.substring(0, 1)?.toUpperCase() + mTeamName?.substring(1)
+        title = mEventName?.substring(0, 1)?.toUpperCase() + mEventName?.substring(1)
 
         mErrorView?.setErrorListener(this)
 
-        mDetailPresenter.getTeamDetail(mTeamId as String)
+        mDetailPresenter.getEventDetail(mEventId as String)
     }
 
     override val layout: Int
         get() = R.layout.activity_detail
 
-    override fun showTeam(team: Team) {
-        mTeamBadge?.loadImageFromUrl(team.teamBadge)
+    override fun showEvent(eventMatch: EventMatch) {
         mTeamLayout?.visibility = View.VISIBLE
         val detailView = DetailView(this)
-        detailView.setTeam(team)
-        mStatLayout?.addView(detailView)
+        detailView.setEvent(eventMatch)
+        mTeamLayout?.addView(detailView)
     }
 
     override fun showProgress(show: Boolean) {
@@ -94,7 +83,7 @@ class DetailActivity : BaseActivity(), DetailMvpView, ErrorView.ErrorListener {
     }
 
     override fun onReloadData() {
-        mDetailPresenter.getTeamDetail(mTeamId as String)
+        mDetailPresenter.getEventDetail(mEventId as String)
     }
 
     override fun onDestroy() {
@@ -104,13 +93,13 @@ class DetailActivity : BaseActivity(), DetailMvpView, ErrorView.ErrorListener {
 
     companion object {
 
-        const val EXTRA_TEAM_ID = "EXTRA_TEAM_ID"
-        const val EXTRA_TEAM_NAME = "EXTRA_TEAM_NAME"
+        const val EXTRA_ID = "EXTRA_ID"
+        const val EXTRA_NAME = "EXTRA_NAME"
 
         fun getStartIntent(context: Context, teamId: String, teamName: String): Intent {
             val intent = Intent(context, DetailActivity::class.java)
-            intent.putExtra(EXTRA_TEAM_ID, teamId)
-            intent.putExtra(EXTRA_TEAM_NAME, teamName)
+            intent.putExtra(EXTRA_ID, teamId)
+            intent.putExtra(EXTRA_NAME, teamName)
             return intent
         }
     }
