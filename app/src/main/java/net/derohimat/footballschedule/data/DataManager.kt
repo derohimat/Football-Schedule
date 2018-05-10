@@ -2,6 +2,7 @@ package net.derohimat.footballschedule.data
 
 import io.reactivex.Observable
 import io.reactivex.Single
+import net.derohimat.footballschedule.data.model.EventMatchResponse
 import net.derohimat.footballschedule.data.model.League
 import net.derohimat.footballschedule.data.model.Team
 import net.derohimat.footballschedule.data.model.TeamResponse
@@ -13,13 +14,13 @@ import javax.inject.Singleton
 class DataManager @Inject
 constructor(private val mFootBallApi: FootBallApi) {
 
-    fun getLeagueList(): Single<List<String>> {
+    fun getLeagueList(): Observable<List<League>> {
         return mFootBallApi.getLeagueList()
                 .toObservable()
                 .flatMapIterable { leagueResponse -> leagueResponse.leagues }
                 .filter { league: League -> league.leagueStr.equals("Soccer") }
-                .map { league -> league.leagueName }
                 .toList()
+                .toObservable()
     }
 
     fun getTeamList(league: String): Single<List<Team>> {
@@ -27,6 +28,15 @@ constructor(private val mFootBallApi: FootBallApi) {
                 .toObservable()
                 .flatMapIterable { teamResponse -> teamResponse.teams }
                 .toList()
+    }
+
+    fun getEventMatch(leagueId: String, type: Int): Single<EventMatchResponse> {
+        return when (type) {
+            0 -> mFootBallApi.getPrevMatch(leagueId)
+            else -> {
+                mFootBallApi.getNextMatch(leagueId)
+            }
+        }
     }
 
     fun getTeamDetail(teamId: String): Observable<Team> {

@@ -1,6 +1,7 @@
 package net.derohimat.footballschedule.data.remote
 
 import io.reactivex.Single
+import net.derohimat.footballschedule.data.model.EventMatchResponse
 import net.derohimat.footballschedule.data.model.LeagueResponse
 import net.derohimat.footballschedule.data.model.TeamResponse
 import retrofit2.http.GET
@@ -13,6 +14,12 @@ interface FootBallApi {
 
     @GET("search_all_teams.php")
     fun getTeamList(@Query("l") league: String): Single<TeamResponse>
+
+    @GET("eventspastleague.php")
+    fun getPrevMatch(@Query("id") leagueId: String): Single<EventMatchResponse>
+
+    @GET("eventsnextleague.php")
+    fun getNextMatch(@Query("id") leagueId: String): Single<EventMatchResponse>
 
     @GET("lookupteam.php")
     fun getTeamDetail(@Query("id") teamId: String): Single<TeamResponse>

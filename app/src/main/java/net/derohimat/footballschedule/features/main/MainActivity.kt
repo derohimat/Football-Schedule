@@ -1,5 +1,6 @@
 package net.derohimat.footballschedule.features.main
 
+import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.AppCompatSpinner
@@ -11,8 +12,11 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.ProgressBar
 import butterknife.BindView
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigation
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem
 import net.derohimat.footballschedule.R
-import net.derohimat.footballschedule.data.model.Team
+import net.derohimat.footballschedule.data.model.EventMatch
+import net.derohimat.footballschedule.data.model.League
 import net.derohimat.footballschedule.features.base.BaseActivity
 import net.derohimat.footballschedule.features.common.ErrorView
 import net.derohimat.footballschedule.features.detail.DetailActivity
@@ -21,10 +25,10 @@ import java.util.*
 import javax.inject.Inject
 
 
-class MainActivity : BaseActivity(), MainMvpView, TeamAdapter.ClickListener, ErrorView.ErrorListener, AdapterView.OnItemSelectedListener {
+class MainActivity : BaseActivity(), MainMvpView, EventAdapter.ClickListener, ErrorView.ErrorListener, AdapterView.OnItemSelectedListener {
 
     @Inject
-    lateinit var mTeamAdapter: TeamAdapter
+    lateinit var mEventAdapter: EventAdapter
     @Inject
     lateinit var mMainPresenter: MainPresenter
 
@@ -48,12 +52,17 @@ class MainActivity : BaseActivity(), MainMvpView, TeamAdapter.ClickListener, Err
     @JvmField
     var mSwipeRefreshLayout: SwipeRefreshLayout? = null
 
+    @BindView(R.id.bottom_navigation)
+    @JvmField
+    var mBottomNavigation: AHBottomNavigation? = null
+
     @BindView(R.id.toolbar)
     @JvmField
     var mToolbar: Toolbar? = null
 
-    private var leagueList: List<String> = ArrayList()
-    private var selectedLeague: String = "English Premier League"
+    private var leagueList: List<League> = ArrayList()
+    private var selectedLeague: String = "4328"
+    private var selectedType: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,19 +73,50 @@ class MainActivity : BaseActivity(), MainMvpView, TeamAdapter.ClickListener, Err
 
         mSwipeRefreshLayout?.setProgressBackgroundColorSchemeResource(R.color.primary)
         mSwipeRefreshLayout?.setColorSchemeResources(R.color.white)
-        mSwipeRefreshLayout?.setOnRefreshListener { mMainPresenter.getTeams(selectedLeague) }
+        mSwipeRefreshLayout?.setOnRefreshListener { mMainPresenter.getEvent(selectedLeague, selectedType) }
 
-        mTeamAdapter.setClickListener(this)
+        mEventAdapter.setClickListener(this)
         mRecycler?.layoutManager = LinearLayoutManager(this)
-        mRecycler?.adapter = mTeamAdapter
+        mRecycler?.adapter = mEventAdapter
 
         mErrorView?.setErrorListener(this)
 
         mSpinner?.onItemSelectedListener = this
 
-        setupAdapter(resources.getStringArray(R.array.top_league).toList())
+        setupBottomNavigation()
 
         mMainPresenter.getLeague()
+    }
+
+    private fun setupBottomNavigation() {
+        val item1 = AHBottomNavigationItem(R.string.tab_1, R.drawable.ic_skip_previous_white_24dp, R.color.primary)
+        val item2 = AHBottomNavigationItem(R.string.tab_2, R.drawable.ic_skip_next_white_24dp, R.color.primary)
+
+        mBottomNavigation?.addItem(item1)
+        mBottomNavigation?.addItem(item2)
+
+
+        mBottomNavigation?.defaultBackgroundColor = Color.parseColor("#FEFEFE")
+        mBottomNavigation?.isBehaviorTranslationEnabled = true
+        mBottomNavigation?.accentColor = Color.parseColor("#F63D2B")
+        mBottomNavigation?.inactiveColor = Color.parseColor("#747474")
+        mBottomNavigation?.titleState = AHBottomNavigation.TitleState.ALWAYS_SHOW
+        mBottomNavigation?.isColored = true
+
+        mBottomNavigation?.setOnTabSelectedListener({ position, wasSelected ->
+            // Do something cool here...
+            when (position) {
+                0 -> {
+                    selectedType = 0
+                    mMainPresenter.getEvent(selectedLeague, selectedType)
+                }
+                else -> {
+                    selectedType = 1
+                    mMainPresenter.getEvent(selectedLeague, selectedType)
+                }
+            }
+            true
+        })
     }
 
     override val layout: Int
@@ -87,18 +127,18 @@ class MainActivity : BaseActivity(), MainMvpView, TeamAdapter.ClickListener, Err
         mMainPresenter.detachView()
     }
 
-    override fun setupAdapter(data: List<String>) {
+    override fun setupAdapter(data: List<League>) {
         leagueList = data
 
         val dataAdapter = ArrayAdapter<String>(this,
-                R.layout.item_league, leagueList)
+                R.layout.item_league, leagueList.map { league -> league.leagueName })
 
         mSpinner?.adapter = dataAdapter
     }
 
-    override fun showTeams(data: List<Team>) {
-        mTeamAdapter.setData(data)
-        mTeamAdapter.notifyDataSetChanged()
+    override fun showEventMatch(data: List<EventMatch>) {
+        mEventAdapter.setData(data, selectedType)
+        mEventAdapter.notifyDataSetChanged()
 
         mRecycler?.visibility = View.VISIBLE
         mSwipeRefreshLayout?.visibility = View.VISIBLE
@@ -106,7 +146,7 @@ class MainActivity : BaseActivity(), MainMvpView, TeamAdapter.ClickListener, Err
 
     override fun showProgress(show: Boolean) {
         if (show) {
-            if (mRecycler?.visibility == View.VISIBLE && mTeamAdapter.itemCount > 0) {
+            if (mRecycler?.visibility == View.VISIBLE && mEventAdapter.itemCount > 0) {
                 mSwipeRefreshLayout?.isRefreshing = true
             } else {
                 mProgress?.visibility = View.VISIBLE
@@ -137,11 +177,15 @@ class MainActivity : BaseActivity(), MainMvpView, TeamAdapter.ClickListener, Err
     }
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        selectedLeague = leagueList[position]
-        mMainPresenter.getTeams(selectedLeague)
+        when {
+            leagueList.isNotEmpty() -> {
+                selectedLeague = leagueList[position].leagueId
+                mMainPresenter.getEvent(selectedLeague, selectedType)
+            }
+        }
     }
 
     override fun onReloadData() {
-        mMainPresenter.getTeams(selectedLeague)
+        mMainPresenter.getEvent(selectedLeague, selectedType)
     }
 }

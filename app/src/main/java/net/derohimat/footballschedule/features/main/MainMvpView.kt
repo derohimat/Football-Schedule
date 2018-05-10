@@ -1,13 +1,14 @@
 package net.derohimat.footballschedule.features.main
 
-import net.derohimat.footballschedule.data.model.Team
+import net.derohimat.footballschedule.data.model.EventMatch
+import net.derohimat.footballschedule.data.model.League
 import net.derohimat.footballschedule.features.base.MvpView
 
 interface MainMvpView : MvpView {
 
-    fun setupAdapter(data: List<String>)
+    fun setupAdapter(data: List<League>)
 
-    fun showTeams(data: List<Team>)
+    fun showEventMatch(data: List<EventMatch>)
 
     fun showProgress(show: Boolean)
 

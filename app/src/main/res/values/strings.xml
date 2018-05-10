@@ -6,7 +6,12 @@
 
     <!-- Error View -->
     <string name="error_title">Oops</string>
-    <string name="error_message">There was a problem loading the team, please try again!</string>
+    <string name="error_message">There was a problem loading the eventMatch, please try again!</string>
     <string name="error_reload">Reload</string>
-    <string name="title_activity_maps_sample">Map</string>
+
+    <!-- Main Tab -->
+    <string name="tab_1">Prev</string>
+    <string name="tab_2">Next</string>
+    <string name="vs">VS</string>
+
 </resources>

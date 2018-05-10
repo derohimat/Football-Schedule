@@ -1,7 +1,8 @@
 package net.derohimat.footballschedule.features.main
 
 import net.derohimat.footballschedule.data.DataManager
-import net.derohimat.footballschedule.data.model.Team
+import net.derohimat.footballschedule.data.model.EventMatchResponse
+import net.derohimat.footballschedule.data.model.League
 import net.derohimat.footballschedule.features.base.BasePresenter
 import net.derohimat.footballschedule.injection.ConfigPersistent
 import net.derohimat.footballschedule.util.rx.scheduler.SchedulerUtils
@@ -15,7 +16,7 @@ constructor(private val mDataManager: DataManager) : BasePresenter<MainMvpView>(
         checkViewAttached()
         mvpView?.showProgress(true)
         mDataManager.getLeagueList()
-                .compose(SchedulerUtils.ioToMain<List<String>>())
+                .compose(SchedulerUtils.ioToMain<List<League>>())
                 .subscribe({ teams ->
                     mvpView?.showProgress(false)
                     mvpView?.setupAdapter(teams)
@@ -25,14 +26,14 @@ constructor(private val mDataManager: DataManager) : BasePresenter<MainMvpView>(
                 }
     }
 
-    fun getTeams(league: String) {
+    fun getEvent(leagueId: String, type: Int) {
         checkViewAttached()
         mvpView?.showProgress(true)
-        mDataManager.getTeamList(league)
-                .compose(SchedulerUtils.ioToMain<List<Team>>())
-                .subscribe({ teams ->
+        mDataManager.getEventMatch(leagueId, type)
+                .compose(SchedulerUtils.ioToMain<EventMatchResponse>())
+                .subscribe({ eventMatchResponse ->
                     mvpView?.showProgress(false)
-                    mvpView?.showTeams(teams)
+                    mvpView?.showEventMatch(eventMatchResponse.events)
                 }) { throwable ->
                     mvpView?.showProgress(false)
                     mvpView?.showError(throwable)
