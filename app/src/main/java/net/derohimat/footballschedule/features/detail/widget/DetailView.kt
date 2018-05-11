@@ -7,12 +7,14 @@ import android.os.Build
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.LayoutInflater
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import butterknife.BindView
 import butterknife.ButterKnife
 import net.derohimat.footballschedule.R
 import net.derohimat.footballschedule.data.model.EventMatch
+import net.derohimat.footballschedule.util.loadImageFromUrl
 
 class DetailView : LinearLayout {
 
@@ -22,6 +24,12 @@ class DetailView : LinearLayout {
     @BindView(R.id.txt_date)
     @JvmField
     var txtDate: TextView? = null
+    @BindView(R.id.img_home)
+    @JvmField
+    var imgHome: ImageView? = null
+    @BindView(R.id.img_away)
+    @JvmField
+    var imgAway: ImageView? = null
     @BindView(R.id.txt_home)
     @JvmField
     var txtHome: TextView? = null
@@ -124,7 +132,14 @@ class DetailView : LinearLayout {
         txtAwayMidfielder?.text = eventMatch.awayLineupMidfield?.replace("; ", "\n")
         txtHomeForward?.text = eventMatch.homeLineupForward?.replace("; ", "\n")
         txtAwayForward?.text = eventMatch.awayLineupForward?.replace("; ", "\n")
+    }
 
-
+    fun setImage(imgUrl: String, type: Int) {
+        when (type) {
+            0 -> imgHome?.loadImageFromUrl(imgUrl)
+            else -> {
+                imgAway?.loadImageFromUrl(imgUrl)
+            }
+        }
     }
 }

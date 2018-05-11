@@ -10,6 +10,7 @@ import android.widget.ProgressBar
 import butterknife.BindView
 import net.derohimat.footballschedule.R
 import net.derohimat.footballschedule.data.model.EventMatch
+import net.derohimat.footballschedule.data.model.Team
 import net.derohimat.footballschedule.features.base.BaseActivity
 import net.derohimat.footballschedule.features.common.ErrorView
 import net.derohimat.footballschedule.features.detail.widget.DetailView
@@ -36,6 +37,8 @@ class DetailActivity : BaseActivity(), DetailMvpView, ErrorView.ErrorListener {
     @BindView(R.id.layout_team)
     @JvmField
     var mTeamLayout: LinearLayout? = null
+
+    lateinit var detailView: DetailView
 
     private var mEventId: String? = null
     private var mEventName: String? = null
@@ -66,9 +69,16 @@ class DetailActivity : BaseActivity(), DetailMvpView, ErrorView.ErrorListener {
 
     override fun showEvent(eventMatch: EventMatch) {
         mTeamLayout?.visibility = View.VISIBLE
-        val detailView = DetailView(this)
+        detailView = DetailView(this)
         detailView.setEvent(eventMatch)
         mTeamLayout?.addView(detailView)
+
+        eventMatch.idHomeTeam?.let { mDetailPresenter.getTeamDetail(it, 0) }
+        eventMatch.idAwayTeam?.let { mDetailPresenter.getTeamDetail(it, 1) }
+    }
+
+    override fun showTeam(team: Team, type: Int) {
+        detailView.setImage(team.teamBadge, type)
     }
 
     override fun showProgress(show: Boolean) {
