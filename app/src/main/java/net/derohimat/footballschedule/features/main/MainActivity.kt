@@ -103,7 +103,7 @@ class MainActivity : BaseActivity(), MainMvpView, EventAdapter.ClickListener, Er
         mBottomNavigation?.titleState = AHBottomNavigation.TitleState.ALWAYS_SHOW
         mBottomNavigation?.isColored = true
 
-        mBottomNavigation?.setOnTabSelectedListener({ position, wasSelected ->
+        mBottomNavigation?.setOnTabSelectedListener({ position, _ ->
             // Do something cool here...
             when (position) {
                 0 -> {

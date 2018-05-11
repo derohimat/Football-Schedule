@@ -65,12 +65,12 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
+        return when (item.itemId) {
             android.R.id.home -> {
                 finish()
-                return true
+                true
             }
-            else -> return super.onOptionsItemSelected(item)
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
@@ -80,7 +80,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
     companion object {
 
-        private val KEY_ACTIVITY_ID = "KEY_ACTIVITY_ID"
+        private const val KEY_ACTIVITY_ID = "KEY_ACTIVITY_ID"
         private val NEXT_ID = AtomicLong(0)
         private val sComponentsArray = LongSparseArray<ConfigPersistentComponent>()
     }
