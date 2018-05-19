@@ -129,7 +129,7 @@ class DetailView : LinearLayout {
         txtName?.text = eventMatch.league?.substring(0, 1)?.toUpperCase() + eventMatch.league?.substring(1)
         txtDate?.text = eventMatch.dateEvent
 
-        isFavorite = isFavoriteEvent(dbHelper, eventMatch.idEvent!!)
+        isFavorite = isFavoriteEvent(dbHelper, eventMatch.idEvent)
 
         when {
             isFavorite -> {
@@ -184,7 +184,7 @@ class DetailView : LinearLayout {
         }
     }
 
-    fun addToFavorite(database: DatabaseHelper, eventMatch: EventMatch) {
+    private fun addToFavorite(database: DatabaseHelper, eventMatch: EventMatch) {
         try {
             database.use {
                 insert("favorite",
@@ -202,7 +202,7 @@ class DetailView : LinearLayout {
         }
     }
 
-    fun removeFromFavorite(database: DatabaseHelper, eventId: String) {
+    private fun removeFromFavorite(database: DatabaseHelper, eventId: String) {
         try {
             database.use {
                 delete("favorite",
@@ -214,7 +214,7 @@ class DetailView : LinearLayout {
         }
     }
 
-    fun isFavoriteEvent(database: DatabaseHelper, eventId: String): Boolean {
+    private fun isFavoriteEvent(database: DatabaseHelper, eventId: String): Boolean {
         var isFavorite = false
         database.use {
             val result = select("favorite")

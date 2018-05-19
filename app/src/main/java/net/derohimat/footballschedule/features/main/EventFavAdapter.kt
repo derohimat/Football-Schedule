@@ -8,13 +8,13 @@ import android.widget.TextView
 import butterknife.BindView
 import butterknife.ButterKnife
 import net.derohimat.footballschedule.R
-import net.derohimat.footballschedule.data.model.EventMatch
+import net.derohimat.footballschedule.data.model.EventMatchFav
 import javax.inject.Inject
 
-class EventAdapter @Inject
-constructor() : RecyclerView.Adapter<EventAdapter.EventViewHolder>() {
+class EventFavAdapter @Inject
+constructor() : RecyclerView.Adapter<EventFavAdapter.EventViewHolder>() {
 
-    private var list: List<EventMatch>
+    private var list: List<EventMatchFav>
     private var eventType: Int = 0
     private lateinit var mClickListener: ClickListener
 
@@ -22,12 +22,12 @@ constructor() : RecyclerView.Adapter<EventAdapter.EventViewHolder>() {
         list = emptyList()
     }
 
-    fun setData(data: List<EventMatch>, type: Int) {
+    fun setData(data: List<EventMatchFav>, type: Int) {
         list = data
         eventType = type
     }
 
-    fun clearData(){
+    fun clearData() {
         list = emptyList()
         notifyDataSetChanged()
     }
@@ -72,7 +72,7 @@ constructor() : RecyclerView.Adapter<EventAdapter.EventViewHolder>() {
 
     inner class EventViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        lateinit var item: EventMatch
+        lateinit var item: EventMatchFav
 
         @BindView(R.id.txt_date)
         @JvmField
@@ -96,7 +96,7 @@ constructor() : RecyclerView.Adapter<EventAdapter.EventViewHolder>() {
 
         init {
             ButterKnife.bind(this, itemView)
-            itemView.setOnClickListener { mClickListener.onTeamClick(item.idEvent as String, item.event as String) }
+            itemView.setOnClickListener { mClickListener.onTeamClick(item.idEvent, item.event as String) }
         }
     }
 }

@@ -15,20 +15,27 @@ import butterknife.BindView
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem
 import net.derohimat.footballschedule.R
+import net.derohimat.footballschedule.data.db.database
 import net.derohimat.footballschedule.data.model.EventMatch
+import net.derohimat.footballschedule.data.model.EventMatchFav
 import net.derohimat.footballschedule.data.model.League
 import net.derohimat.footballschedule.features.base.BaseActivity
 import net.derohimat.footballschedule.features.common.ErrorView
 import net.derohimat.footballschedule.features.detail.DetailActivity
+import org.jetbrains.anko.db.classParser
+import org.jetbrains.anko.db.parseList
+import org.jetbrains.anko.db.select
 import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 
 
-class MainActivity : BaseActivity(), MainMvpView, EventAdapter.ClickListener, ErrorView.ErrorListener, AdapterView.OnItemSelectedListener {
+class MainActivity : BaseActivity(), MainMvpView, EventAdapter.ClickListener, EventFavAdapter.ClickListener, ErrorView.ErrorListener, AdapterView.OnItemSelectedListener {
 
     @Inject
     lateinit var mEventAdapter: EventAdapter
+    @Inject
+    lateinit var mEventFavAdapter: EventFavAdapter
     @Inject
     lateinit var mMainPresenter: MainPresenter
 
@@ -73,9 +80,10 @@ class MainActivity : BaseActivity(), MainMvpView, EventAdapter.ClickListener, Er
 
         mSwipeRefreshLayout?.setProgressBackgroundColorSchemeResource(R.color.primary)
         mSwipeRefreshLayout?.setColorSchemeResources(R.color.white)
-        mSwipeRefreshLayout?.setOnRefreshListener { mMainPresenter.getEvent(selectedLeague, selectedType) }
+        mSwipeRefreshLayout?.setOnRefreshListener { getEvent() }
 
         mEventAdapter.setClickListener(this)
+        mEventFavAdapter.setClickListener(this)
         mRecycler?.layoutManager = LinearLayoutManager(this)
         mRecycler?.adapter = mEventAdapter
 
@@ -91,10 +99,11 @@ class MainActivity : BaseActivity(), MainMvpView, EventAdapter.ClickListener, Er
     private fun setupBottomNavigation() {
         val item1 = AHBottomNavigationItem(R.string.tab_1, R.drawable.ic_skip_previous_white_24dp, R.color.primary)
         val item2 = AHBottomNavigationItem(R.string.tab_2, R.drawable.ic_skip_next_white_24dp, R.color.primary)
+        val item3 = AHBottomNavigationItem(R.string.tab_2, R.drawable.ic_favorite_white_24dp, R.color.primary)
 
         mBottomNavigation?.addItem(item1)
         mBottomNavigation?.addItem(item2)
-
+        mBottomNavigation?.addItem(item3)
 
         mBottomNavigation?.defaultBackgroundColor = Color.parseColor("#FEFEFE")
         mBottomNavigation?.isBehaviorTranslationEnabled = true
@@ -104,15 +113,18 @@ class MainActivity : BaseActivity(), MainMvpView, EventAdapter.ClickListener, Er
         mBottomNavigation?.isColored = true
 
         mBottomNavigation?.setOnTabSelectedListener({ position, _ ->
-            // Do something cool here...
             when (position) {
                 0 -> {
                     selectedType = 0
                     mMainPresenter.getEvent(selectedLeague, selectedType)
                 }
-                else -> {
+                1 -> {
                     selectedType = 1
                     mMainPresenter.getEvent(selectedLeague, selectedType)
+                }
+                else -> {
+                    selectedType = 2
+                    showEventMatchFav(getFavorite())
                 }
             }
             true
@@ -137,9 +149,23 @@ class MainActivity : BaseActivity(), MainMvpView, EventAdapter.ClickListener, Er
     }
 
     override fun showEventMatch(data: List<EventMatch>) {
+        mEventFavAdapter.clearData()
+        mRecycler?.adapter = mEventAdapter
         mEventAdapter.setData(data, selectedType)
         mEventAdapter.notifyDataSetChanged()
 
+        mErrorView?.visibility = View.GONE
+        mRecycler?.visibility = View.VISIBLE
+        mSwipeRefreshLayout?.visibility = View.VISIBLE
+    }
+
+    override fun showEventMatchFav(data: List<EventMatchFav>) {
+        mEventAdapter.clearData()
+        mRecycler?.adapter = mEventFavAdapter
+        mEventFavAdapter.setData(data, selectedType)
+        mEventAdapter.notifyDataSetChanged()
+
+        mErrorView?.visibility = View.GONE
         mRecycler?.visibility = View.VISIBLE
         mSwipeRefreshLayout?.visibility = View.VISIBLE
     }
@@ -176,13 +202,41 @@ class MainActivity : BaseActivity(), MainMvpView, EventAdapter.ClickListener, Er
     override fun onNothingSelected(parent: AdapterView<*>?) {
     }
 
+    private fun getEvent() {
+        when (selectedType) {
+            0 -> {
+                mMainPresenter.getEvent(selectedLeague, selectedType)
+            }
+            1 -> {
+                mMainPresenter.getEvent(selectedLeague, selectedType)
+            }
+            else -> {
+                showEventMatchFav(getFavorite())
+            }
+        }
+    }
+
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         when {
             leagueList.isNotEmpty() -> {
                 selectedLeague = leagueList[position].leagueId
-                mMainPresenter.getEvent(selectedLeague, selectedType)
+                getEvent()
             }
         }
+    }
+
+    private fun getFavorite(): List<EventMatchFav> {
+        return database.use {
+            select("favorite").exec {
+                parseList(classParser())
+            }
+        }
+    }
+
+    override fun showNoMatch() {
+        mEventAdapter.clearData()
+        mEventFavAdapter.clearData()
+        mErrorView?.visibility = View.VISIBLE
     }
 
     override fun onReloadData() {

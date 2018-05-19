@@ -33,7 +33,11 @@ constructor(private val mDataManager: DataManager) : BasePresenter<MainMvpView>(
                 .compose(SchedulerUtils.ioToMain<EventMatchResponse>())
                 .subscribe({ eventMatchResponse ->
                     mvpView?.showProgress(false)
-                    mvpView?.showEventMatch(eventMatchResponse.events)
+                    if(eventMatchResponse.events == null) {
+                        mvpView?.showNoMatch()
+                    } else {
+                        mvpView?.showEventMatch(eventMatchResponse.events)
+                    }
                 }) { throwable ->
                     mvpView?.showProgress(false)
                     mvpView?.showError(throwable)

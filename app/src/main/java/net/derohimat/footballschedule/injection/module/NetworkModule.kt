@@ -71,6 +71,7 @@ class NetworkModule(private val context: Context) {
     @Singleton
     internal fun provideGson(): Gson {
         return GsonBuilder()
+                .serializeNulls()
                 .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .create()
