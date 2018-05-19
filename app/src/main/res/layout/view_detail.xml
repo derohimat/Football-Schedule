@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
        xmlns:tools="http://schemas.android.com/tools"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:gravity="center_horizontal"
        tools:orientation="vertical"
        tools:parentTag="android.widget.LinearLayout">
 
@@ -9,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Event Name"
+        android:text="@string/event_name"
         android:textSize="@dimen/text_headline"/>
 
     <TextView
@@ -17,8 +20,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Date"
+        android:text="@string/date"
         android:textColor="@color/primary"
+        android:textSize="@dimen/text_body"/>
+
+    <TextView
+        android:id="@+id/txt_favorite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/add_to_favorite"
+        android:textColor="@color/accent"
         android:textSize="@dimen/text_body"/>
 
     <LinearLayout
@@ -71,7 +83,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center_horizontal"
-            android:text="Test"
+            android:text="@string/test"
             android:textSize="18sp"
             android:textStyle="bold"/>
 
@@ -111,7 +123,7 @@
             android:layout_weight="1"
             android:gravity="center_horizontal"
             android:maxLength="12"
-            android:text="Test"
+            android:text="@string/test"
             android:textSize="18sp"
             android:textStyle="bold"/>
 
@@ -136,7 +148,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Test"
+            android:text="@string/test"
             android:textSize="14sp"/>
 
         <TextView
@@ -151,7 +163,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="right"
-            android:text="Test"
+            android:text="@string/test"
             android:textSize="14sp"/>
 
     </LinearLayout>
@@ -168,7 +180,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Test"
+            android:text="@string/test"
             android:textSize="14sp"/>
 
         <TextView
@@ -183,7 +195,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="right"
-            android:text="Test"
+            android:text="@string/test"
             android:textSize="14sp"/>
 
     </LinearLayout>
@@ -203,7 +215,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Test"
+            android:text="@string/test"
             android:textSize="14sp"/>
 
         <TextView
@@ -218,7 +230,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="right"
-            android:text="Test"
+            android:text="@string/test"
             android:textSize="14sp"/>
 
     </LinearLayout>
@@ -249,7 +261,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Test"
+            android:text="@string/test"
             android:textSize="14sp"/>
 
         <TextView
@@ -264,7 +276,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="right"
-            android:text="Test"
+            android:text="@string/test"
             android:textSize="14sp"/>
 
     </LinearLayout>
@@ -283,7 +295,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Test"
+            android:text="@string/test"
             android:textSize="14sp"/>
 
         <TextView
@@ -298,7 +310,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="right"
-            android:text="Test"
+            android:text="@string/test"
             android:textSize="14sp"/>
 
     </LinearLayout>
@@ -317,7 +329,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Test"
+            android:text="@string/test"
             android:textSize="14sp"/>
 
         <TextView
@@ -332,7 +344,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="right"
-            android:text="Test"
+            android:text="@string/test"
             android:textSize="14sp"/>
 
     </LinearLayout>
@@ -351,7 +363,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Test"
+            android:text="@string/test"
             android:textSize="14sp"/>
 
         <TextView
@@ -366,7 +378,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="right"
-            android:text="Test"
+            android:text="@string/test"
             android:textSize="14sp"/>
 
     </LinearLayout>

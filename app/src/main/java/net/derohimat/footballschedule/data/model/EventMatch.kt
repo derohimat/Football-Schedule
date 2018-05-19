@@ -22,7 +22,7 @@ data class EventMatch(
         val homeLineupForward: String? = null,
 
         @SerializedName("strTVStation")
-        val tVStation: Any? = null,
+        val tvStation: Any? = null,
 
         @SerializedName("strHomeGoalDetails")
         val homeGoalDetails: String? = null,
@@ -34,7 +34,7 @@ data class EventMatch(
         val awayLineupMidfield: String? = null,
 
         @SerializedName("idEvent")
-        val idEvent: String? = null,
+        val idEvent: String = "",
 
         @SerializedName("intRound")
         val round: String? = null,
@@ -148,8 +148,8 @@ data class EventMatch(
         val awayScore: String? = null,
 
         @SerializedName("strCity")
-        val City: String? = null,
+        val city: String? = null,
 
         @SerializedName("strPoster")
-        val Poster: String? = null
+        val poster: String? = null
 )

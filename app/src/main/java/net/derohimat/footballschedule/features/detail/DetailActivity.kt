@@ -9,6 +9,7 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import butterknife.BindView
 import net.derohimat.footballschedule.R
+import net.derohimat.footballschedule.data.db.database
 import net.derohimat.footballschedule.data.model.EventMatch
 import net.derohimat.footballschedule.data.model.Team
 import net.derohimat.footballschedule.features.base.BaseActivity
@@ -70,7 +71,7 @@ class DetailActivity : BaseActivity(), DetailMvpView, ErrorView.ErrorListener {
     override fun showEvent(eventMatch: EventMatch) {
         mTeamLayout?.visibility = View.VISIBLE
         detailView = DetailView(this)
-        detailView.setEvent(eventMatch)
+        detailView.setEvent(eventMatch, database)
         mTeamLayout?.addView(detailView)
 
         eventMatch.idHomeTeam?.let { mDetailPresenter.getTeamDetail(it, 0) }

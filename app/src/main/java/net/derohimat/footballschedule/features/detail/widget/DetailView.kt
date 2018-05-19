@@ -3,6 +3,7 @@ package net.derohimat.footballschedule.features.detail.widget
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.content.Context
+import android.database.sqlite.SQLiteConstraintException
 import android.os.Build
 import android.util.AttributeSet
 import android.view.Gravity
@@ -13,8 +14,15 @@ import android.widget.TextView
 import butterknife.BindView
 import butterknife.ButterKnife
 import net.derohimat.footballschedule.R
+import net.derohimat.footballschedule.data.db.DatabaseHelper
 import net.derohimat.footballschedule.data.model.EventMatch
+import net.derohimat.footballschedule.data.model.EventMatchFav
 import net.derohimat.footballschedule.util.loadImageFromUrl
+import org.jetbrains.anko.db.classParser
+import org.jetbrains.anko.db.delete
+import org.jetbrains.anko.db.insert
+import org.jetbrains.anko.db.select
+import timber.log.Timber
 
 class DetailView : LinearLayout {
 
@@ -24,6 +32,9 @@ class DetailView : LinearLayout {
     @BindView(R.id.txt_date)
     @JvmField
     var txtDate: TextView? = null
+    @BindView(R.id.txt_favorite)
+    @JvmField
+    var txtFavorite: TextView? = null
     @BindView(R.id.img_home)
     @JvmField
     var imgHome: ImageView? = null
@@ -85,6 +96,9 @@ class DetailView : LinearLayout {
     @JvmField
     var txtAwayForward: TextView? = null
 
+    private var isFavorite: Boolean = false
+    private lateinit var database: DatabaseHelper
+
     constructor(context: Context) : super(context) {
         init()
     }
@@ -110,9 +124,36 @@ class DetailView : LinearLayout {
     }
 
     @SuppressLint("SetTextI18n")
-    fun setEvent(eventMatch: EventMatch) {
+    fun setEvent(eventMatch: EventMatch, dbHelper: DatabaseHelper) {
+        this.database = dbHelper
         txtName?.text = eventMatch.league?.substring(0, 1)?.toUpperCase() + eventMatch.league?.substring(1)
         txtDate?.text = eventMatch.dateEvent
+
+        isFavorite = isFavoriteEvent(dbHelper, eventMatch.idEvent!!)
+
+        when {
+            isFavorite -> {
+                txtFavorite?.text = context.getString(R.string.remove_from_favorite)
+            }
+            else -> {
+                txtFavorite?.text = context.getString(R.string.add_to_favorite)
+            }
+        }
+
+        txtFavorite?.setOnClickListener({
+            when {
+                isFavorite -> {
+                    removeFromFavorite(database, eventMatch.idEvent)
+                    txtFavorite?.text = context.getString(R.string.add_to_favorite)
+                    isFavorite = false
+                }
+                else -> {
+                    addToFavorite(database, eventMatch)
+                    txtFavorite?.text = context.getString(R.string.remove_from_favorite)
+                    isFavorite = true
+                }
+            }
+        })
 
         txtHome?.text = eventMatch.homeTeam
         txtAway?.text = eventMatch.awayTeam
@@ -125,7 +166,7 @@ class DetailView : LinearLayout {
         txtHomeShots?.text = eventMatch.homeShots?.replace("; ", "\n")
         txtAwayShots?.text = eventMatch.awayShots?.replace("; ", "\n")
         txtHomeGoalKeeper?.text = eventMatch.homeLineupGoalkeeper?.replace(";", "\n")
-        txtAwayGoalKeeper?.text = eventMatch.homeLineupGoalkeeper?.replace(";", "\n")
+        txtAwayGoalKeeper?.text = eventMatch.awayLineupGoalkeeper?.replace(";", "\n")
         txtHomeDefender?.text = eventMatch.homeLineupDefense?.replace("; ", "\n")
         txtAwayDefender?.text = eventMatch.awayLineupDefense?.replace("; ", "\n")
         txtHomeMidfielder?.text = eventMatch.homeLineupMidfield?.replace("; ", "\n")
@@ -142,4 +183,47 @@ class DetailView : LinearLayout {
             }
         }
     }
+
+    fun addToFavorite(database: DatabaseHelper, eventMatch: EventMatch) {
+        try {
+            database.use {
+                insert("favorite",
+                        "idEvent" to eventMatch.idEvent,
+                        "event" to eventMatch.event,
+                        "dateEvent" to eventMatch.dateEvent,
+                        "homeTeam" to eventMatch.homeTeam,
+                        "homeScore" to eventMatch.homeScore,
+                        "awayTeam" to eventMatch.awayTeam,
+                        "awayScore" to eventMatch.awayScore
+                )
+            }
+        } catch (e: SQLiteConstraintException) {
+            Timber.e(e.message.toString())
+        }
+    }
+
+    fun removeFromFavorite(database: DatabaseHelper, eventId: String) {
+        try {
+            database.use {
+                delete("favorite",
+                        "(idEvent = {idEvent})",
+                        "idEvent" to eventId)
+            }
+        } catch (e: SQLiteConstraintException) {
+            Timber.e(e.message.toString())
+        }
+    }
+
+    fun isFavoriteEvent(database: DatabaseHelper, eventId: String): Boolean {
+        var isFavorite = false
+        database.use {
+            val result = select("favorite")
+                    .whereArgs("(idEvent = {idEvent})",
+                            "idEvent" to eventId)
+            val favorite = result.parseList(classParser<EventMatchFav>())
+            isFavorite = !favorite.isEmpty()
+        }
+        return isFavorite
+    }
+
 }
