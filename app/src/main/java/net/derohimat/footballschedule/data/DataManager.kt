@@ -15,7 +15,7 @@ constructor(private val mFootBallApi: FootBallApi) {
         return mFootBallApi.getLeagueList()
                 .toObservable()
                 .flatMapIterable { leagueResponse -> leagueResponse.leagues }
-                .filter { league: League -> league.leagueStr.equals("Soccer") }
+                .filter { league: League -> league.leagueStr == "Soccer" }
                 .toList()
                 .toObservable()
     }

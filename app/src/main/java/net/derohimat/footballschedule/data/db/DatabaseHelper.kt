@@ -11,7 +11,7 @@ class DatabaseHelper(ctx: Context) :
         private var instance: DatabaseHelper? = null
         private const val TABLE_NAME: String = "favorite"
 
-        fun Instance(context: Context): DatabaseHelper {
+        fun instance(context: Context): DatabaseHelper {
             if (instance == null) {
                 instance = DatabaseHelper(context.applicationContext)
             }
@@ -38,4 +38,4 @@ class DatabaseHelper(ctx: Context) :
 }
 
 val Context.database: DatabaseHelper
-    get() = DatabaseHelper.Instance(applicationContext)
+    get() = DatabaseHelper.instance(applicationContext)
