@@ -96,7 +96,7 @@ constructor() : RecyclerView.Adapter<EventAdapter.EventViewHolder>() {
 
         init {
             ButterKnife.bind(this, itemView)
-            itemView.setOnClickListener { mClickListener.onTeamClick(item.idEvent as String, item.event as String) }
+            itemView.setOnClickListener { mClickListener.onTeamClick(item.idEvent, item.event as String) }
         }
     }
 }

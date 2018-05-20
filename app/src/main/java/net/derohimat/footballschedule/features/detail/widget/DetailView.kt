@@ -1,10 +1,8 @@
 package net.derohimat.footballschedule.features.detail.widget
 
 import android.annotation.SuppressLint
-import android.annotation.TargetApi
 import android.content.Context
 import android.database.sqlite.SQLiteConstraintException
-import android.os.Build
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -22,6 +20,7 @@ import org.jetbrains.anko.db.classParser
 import org.jetbrains.anko.db.delete
 import org.jetbrains.anko.db.insert
 import org.jetbrains.anko.db.select
+import org.jetbrains.anko.sdk25.coroutines.onClick
 import timber.log.Timber
 
 class DetailView : LinearLayout {
@@ -111,11 +110,6 @@ class DetailView : LinearLayout {
         init()
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes) {
-        init()
-    }
-
     private fun init() {
         orientation = LinearLayout.VERTICAL
         gravity = Gravity.CENTER_HORIZONTAL
@@ -131,29 +125,22 @@ class DetailView : LinearLayout {
 
         isFavorite = isFavoriteEvent(dbHelper, eventMatch.idEvent)
 
-        when {
-            isFavorite -> {
-                txtFavorite?.text = context.getString(R.string.remove_from_favorite)
-            }
-            else -> {
-                txtFavorite?.text = context.getString(R.string.add_to_favorite)
-            }
-        }
+        checkFavorite()
 
-        txtFavorite?.setOnClickListener({
+        txtFavorite?.onClick {
             when {
                 isFavorite -> {
                     removeFromFavorite(database, eventMatch.idEvent)
-                    txtFavorite?.text = context.getString(R.string.add_to_favorite)
                     isFavorite = false
+                    checkFavorite()
                 }
                 else -> {
                     addToFavorite(database, eventMatch)
-                    txtFavorite?.text = context.getString(R.string.remove_from_favorite)
                     isFavorite = true
+                    checkFavorite()
                 }
             }
-        })
+        }
 
         txtHome?.text = eventMatch.homeTeam
         txtAway?.text = eventMatch.awayTeam
@@ -211,6 +198,17 @@ class DetailView : LinearLayout {
             }
         } catch (e: SQLiteConstraintException) {
             Timber.e(e.message.toString())
+        }
+    }
+
+    private fun checkFavorite() {
+        when {
+            isFavorite -> {
+                txtFavorite?.text = context.getString(R.string.remove_from_favorite)
+            }
+            else -> {
+                txtFavorite?.text = context.getString(R.string.add_to_favorite)
+            }
         }
     }
 
