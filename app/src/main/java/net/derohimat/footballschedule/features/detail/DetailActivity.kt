@@ -107,9 +107,9 @@ class DetailActivity : BaseActivity(), DetailMvpView, ErrorView.ErrorListener {
         const val EXTRA_ID = "EXTRA_ID"
         const val EXTRA_NAME = "EXTRA_NAME"
 
-        fun getStartIntent(context: Context, teamId: String, teamName: String): Intent {
+        fun getStartIntent(context: Context, eventId: String, teamName: String): Intent {
             val intent = Intent(context, DetailActivity::class.java)
-            intent.putExtra(EXTRA_ID, teamId)
+            intent.putExtra(EXTRA_ID, eventId)
             intent.putExtra(EXTRA_NAME, teamName)
             return intent
         }

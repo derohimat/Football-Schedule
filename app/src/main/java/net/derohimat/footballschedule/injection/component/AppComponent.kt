@@ -20,5 +20,5 @@ interface AppComponent {
 
     fun dataManager(): DataManager
 
-    fun pokemonApi(): FootBallApi
+    fun footballApi(): FootBallApi
 }

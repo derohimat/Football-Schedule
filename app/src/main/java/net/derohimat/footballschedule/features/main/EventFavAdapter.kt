@@ -67,7 +67,7 @@ constructor() : RecyclerView.Adapter<EventFavAdapter.EventViewHolder>() {
     }
 
     interface ClickListener {
-        fun onTeamClick(teamId: String, teamName: String)
+        fun onTeamClick(eventId: String, eventName: String)
     }
 
     inner class EventViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

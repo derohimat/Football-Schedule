@@ -20,14 +20,11 @@ android {
         targetSdkVersion 27
         versionCode 1
         versionName '0.1'
-
-        buildConfigField("String", "BASE_API_URL",
-                "\"${BaseApiUrl}\"")
-
-        buildConfigField("String", "TEST_API_KEY",
-                "\"${TestApiKey}\"")
-
         multiDexEnabled true
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "BASE_API_URL", "\"${BaseApiUrl}\"")
+        buildConfigField("String", "TEST_API_KEY", "\"${TestApiKey}\"")
     }
     buildTypes {
         release {
@@ -61,6 +58,23 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    sourceSets {
+        def commonTestDir = 'src/commonTest/java'
+        test {
+            java.srcDir commonTestDir
+        }
+        androidTest {
+            java.srcDir commonTestDir
+        }
+    }
+
+    testOptions {
+        unitTests {
+            returnDefaultValues = true
+        }
+    }
+
     kotlin {
         experimental {
             coroutines "enable"
@@ -116,8 +130,18 @@ dependencies {
 
     debugImplementation leakCannary
     releaseImplementation leakCannary
+    testImplementation leakCannary
 
     kapt "com.jakewharton:butterknife-compiler:$versions.butterKnife"
     kapt daggerCompiler
+    kaptTest daggerCompiler
+    kaptAndroidTest daggerCompiler
 
+    testImplementation unitTestLibs
+    androidTestImplementation androidTestsLibs
+}
+
+// Log out test results to console
+tasks.matching { it instanceof Test }.all {
+    testLogging.events = ["failed", "passed", "skipped"]
 }

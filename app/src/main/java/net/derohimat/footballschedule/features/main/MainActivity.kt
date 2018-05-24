@@ -195,8 +195,8 @@ class MainActivity : BaseActivity(), MainMvpView, EventAdapter.ClickListener, Ev
         Timber.e(error, "There was an error retrieving data")
     }
 
-    override fun onTeamClick(teamId: String, teamName: String) {
-        startActivity(DetailActivity.getStartIntent(this, teamId, teamName))
+    override fun onTeamClick(eventId: String, eventName: String) {
+        startActivity(DetailActivity.getStartIntent(this, eventId, eventName))
     }
 
     override fun onNothingSelected(parent: AdapterView<*>?) {
