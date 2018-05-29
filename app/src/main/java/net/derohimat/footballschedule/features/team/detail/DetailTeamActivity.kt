@@ -38,7 +38,7 @@ class DetailTeamActivity : BaseActivity(), DetailTeamMvpView, ErrorView.ErrorLis
     @JvmField
     var mTeamLayout: LinearLayout? = null
 
-    lateinit var teamDetailView: TeamDetailView
+    private lateinit var teamDetailView: TeamDetailView
 
     private var mTeamId: String? = null
     private var mTeamName: String? = null
@@ -70,7 +70,7 @@ class DetailTeamActivity : BaseActivity(), DetailTeamMvpView, ErrorView.ErrorLis
     override fun showTeam(team: Team) {
         mTeamLayout?.visibility = View.VISIBLE
         teamDetailView = TeamDetailView(this)
-        teamDetailView.setEvent(team, database)
+        teamDetailView.setTeam(team, database)
         mTeamLayout?.addView(teamDetailView)
     }
 

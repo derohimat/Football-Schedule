@@ -24,7 +24,7 @@ import timber.log.Timber
 
 class TeamDetailView : LinearLayout {
 
-    @BindView(R.id.txt_event_name)
+    @BindView(R.id.txt_team_name)
     @JvmField
     var txtName: TextView? = null
     @BindView(R.id.txt_description)
@@ -33,9 +33,9 @@ class TeamDetailView : LinearLayout {
     @BindView(R.id.txt_favorite)
     @JvmField
     var txtFavorite: TextView? = null
-    @BindView(R.id.img_home)
+    @BindView(R.id.img_badge)
     @JvmField
-    var imgHome: ImageView? = null
+    var imgBadge: ImageView? = null
 
     private var isFavorite: Boolean = false
     private lateinit var database: DatabaseHelper
@@ -60,15 +60,15 @@ class TeamDetailView : LinearLayout {
     }
 
     @SuppressLint("SetTextI18n")
-    fun setEvent(team: Team, dbHelper: DatabaseHelper) {
+    fun setTeam(team: Team, dbHelper: DatabaseHelper) {
         this.database = dbHelper
-        txtName?.text = team.teamName
+        txtName?.text = team.teamName.substring(0, 1).toUpperCase() + team.teamName.substring(1)
+
+        imgBadge?.loadImageFromUrl(team.teamBadge)
 
         isFavorite = isFavoriteEvent(dbHelper, team.teamId)
 
         checkFavorite()
-
-        imgHome?.loadImageFromUrl(team.teamBadge)
 
         txtFavorite?.onClick {
             when {
