@@ -99,7 +99,7 @@ class MainActivity : BaseActivity(), MainMvpView, EventAdapter.ClickListener, Ev
     private fun setupBottomNavigation() {
         val item1 = AHBottomNavigationItem(R.string.tab_1, R.drawable.ic_skip_previous_white_24dp, R.color.primary)
         val item2 = AHBottomNavigationItem(R.string.tab_2, R.drawable.ic_skip_next_white_24dp, R.color.primary)
-        val item3 = AHBottomNavigationItem(R.string.tab_2, R.drawable.ic_favorite_white_24dp, R.color.primary)
+        val item3 = AHBottomNavigationItem(R.string.tab_3, R.drawable.ic_favorite_white_24dp, R.color.primary)
 
         mBottomNavigation?.addItem(item1)
         mBottomNavigation?.addItem(item2)
