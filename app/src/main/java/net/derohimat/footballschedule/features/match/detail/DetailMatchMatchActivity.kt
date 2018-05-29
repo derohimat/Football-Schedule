@@ -1,4 +1,4 @@
-package net.derohimat.footballschedule.features.detail
+package net.derohimat.footballschedule.features.match.detail
 
 import android.content.Context
 import android.content.Intent
@@ -14,14 +14,14 @@ import net.derohimat.footballschedule.data.model.EventMatch
 import net.derohimat.footballschedule.data.model.Team
 import net.derohimat.footballschedule.features.base.BaseActivity
 import net.derohimat.footballschedule.features.common.ErrorView
-import net.derohimat.footballschedule.features.detail.widget.DetailView
+import net.derohimat.footballschedule.features.match.detail.widget.DetailView
 import timber.log.Timber
 import javax.inject.Inject
 
-class DetailActivity : BaseActivity(), DetailMvpView, ErrorView.ErrorListener {
+class DetailMatchMatchActivity : BaseActivity(), DetailMatchMvpView, ErrorView.ErrorListener {
 
     @Inject
-    lateinit var mDetailPresenter: DetailPresenter
+    lateinit var mDetailMatchPresenter: DetailMatchPresenter
 
     @BindView(R.id.view_error)
     @JvmField
@@ -47,7 +47,7 @@ class DetailActivity : BaseActivity(), DetailMvpView, ErrorView.ErrorListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityComponent().inject(this)
-        mDetailPresenter.attachView(this)
+        mDetailMatchPresenter.attachView(this)
 
         mEventId = intent.getStringExtra(EXTRA_ID)
         mEventName = intent.getStringExtra(EXTRA_NAME)
@@ -62,7 +62,7 @@ class DetailActivity : BaseActivity(), DetailMvpView, ErrorView.ErrorListener {
 
         mErrorView?.setErrorListener(this)
 
-        mDetailPresenter.getEventDetail(mEventId as String)
+        mDetailMatchPresenter.getEventDetail(mEventId as String)
     }
 
     override val layout: Int
@@ -74,8 +74,8 @@ class DetailActivity : BaseActivity(), DetailMvpView, ErrorView.ErrorListener {
         detailView.setEvent(eventMatch, database)
         mTeamLayout?.addView(detailView)
 
-        eventMatch.idHomeTeam?.let { mDetailPresenter.getTeamDetail(it, 0) }
-        eventMatch.idAwayTeam?.let { mDetailPresenter.getTeamDetail(it, 1) }
+        eventMatch.idHomeTeam?.let { mDetailMatchPresenter.getTeamDetail(it, 0) }
+        eventMatch.idAwayTeam?.let { mDetailMatchPresenter.getTeamDetail(it, 1) }
     }
 
     override fun showTeam(team: Team, type: Int) {
@@ -94,12 +94,12 @@ class DetailActivity : BaseActivity(), DetailMvpView, ErrorView.ErrorListener {
     }
 
     override fun onReloadData() {
-        mDetailPresenter.getEventDetail(mEventId as String)
+        mDetailMatchPresenter.getEventDetail(mEventId as String)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        mDetailPresenter.detachView()
+        mDetailMatchPresenter.detachView()
     }
 
     companion object {
@@ -108,7 +108,7 @@ class DetailActivity : BaseActivity(), DetailMvpView, ErrorView.ErrorListener {
         const val EXTRA_NAME = "EXTRA_NAME"
 
         fun getStartIntent(context: Context, eventId: String, teamName: String): Intent {
-            val intent = Intent(context, DetailActivity::class.java)
+            val intent = Intent(context, DetailMatchMatchActivity::class.java)
             intent.putExtra(EXTRA_ID, eventId)
             intent.putExtra(EXTRA_NAME, teamName)
             return intent

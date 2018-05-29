@@ -1,11 +1,11 @@
-package net.derohimat.footballschedule.features.main
+package net.derohimat.footballschedule.features.match.main
 
 import net.derohimat.footballschedule.data.model.EventMatch
 import net.derohimat.footballschedule.data.model.EventMatchFav
 import net.derohimat.footballschedule.data.model.League
 import net.derohimat.footballschedule.features.base.MvpView
 
-interface MainMvpView : MvpView {
+interface MatchMvpView : MvpView {
 
     fun setupAdapter(data: List<League>)
 

@@ -1,10 +1,10 @@
-package net.derohimat.footballschedule.features.detail
+package net.derohimat.footballschedule.features.match.detail
 
 import net.derohimat.footballschedule.data.model.EventMatch
 import net.derohimat.footballschedule.data.model.Team
 import net.derohimat.footballschedule.features.base.MvpView
 
-interface DetailMvpView : MvpView {
+interface DetailMatchMvpView : MvpView {
 
     fun showEvent(eventMatch: EventMatch)
 

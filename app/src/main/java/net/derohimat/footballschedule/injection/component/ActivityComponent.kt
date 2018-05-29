@@ -2,8 +2,8 @@ package net.derohimat.footballschedule.injection.component
 
 import dagger.Subcomponent
 import net.derohimat.footballschedule.features.base.BaseActivity
-import net.derohimat.footballschedule.features.detail.DetailActivity
-import net.derohimat.footballschedule.features.main.MainActivity
+import net.derohimat.footballschedule.features.match.detail.DetailMatchMatchActivity
+import net.derohimat.footballschedule.features.match.main.MatchActivity
 import net.derohimat.footballschedule.injection.PerActivity
 import net.derohimat.footballschedule.injection.module.ActivityModule
 
@@ -12,7 +12,7 @@ import net.derohimat.footballschedule.injection.module.ActivityModule
 interface ActivityComponent {
     fun inject(baseActivity: BaseActivity)
 
-    fun inject(mainActivity: MainActivity)
+    fun inject(matchActivity: MatchActivity)
 
-    fun inject(detailActivity: DetailActivity)
+    fun inject(detailMatchActivity: DetailMatchMatchActivity)
 }

@@ -1,4 +1,4 @@
-package net.derohimat.footballschedule.features.main
+package net.derohimat.footballschedule.features.match.main
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater

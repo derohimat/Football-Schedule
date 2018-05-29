@@ -1,11 +1,11 @@
-package net.derohimat.footballschedule
+package net.derohimat.footballschedule.match
 
 import io.reactivex.Single
 import net.derohimat.footballschedule.common.TestDataFactory
 import net.derohimat.footballschedule.data.DataManager
 import net.derohimat.footballschedule.data.model.EventMatchResponse
-import net.derohimat.footballschedule.features.main.MainMvpView
-import net.derohimat.footballschedule.features.main.MainPresenter
+import net.derohimat.footballschedule.features.match.main.MatchMvpView
+import net.derohimat.footballschedule.features.match.main.MatchPresenter
 import net.derohimat.footballschedule.util.RxSchedulersOverrideRule
 import org.junit.After
 import org.junit.Before
@@ -18,13 +18,13 @@ import org.mockito.Mockito.*
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
-class MainPresenterTest {
+class MatchPresenterTest {
 
     @Mock
-    lateinit var mMockMainMvpView: MainMvpView
+    lateinit var mMockMatchMvpView: MatchMvpView
     @Mock
     lateinit var mMockDataManager: DataManager
-    private var mMainPresenter: MainPresenter? = null
+    private var mMatchPresenter: MatchPresenter? = null
 
     @JvmField
     @Rule
@@ -32,13 +32,13 @@ class MainPresenterTest {
 
     @Before
     fun setUp() {
-        mMainPresenter = MainPresenter(mMockDataManager)
-        mMainPresenter?.attachView(mMockMainMvpView)
+        mMatchPresenter = MatchPresenter(mMockDataManager)
+        mMatchPresenter?.attachView(mMockMatchMvpView)
     }
 
     @After
     fun tearDown() {
-        mMainPresenter?.detachView()
+        mMatchPresenter?.detachView()
     }
 
     @Test
@@ -50,11 +50,11 @@ class MainPresenterTest {
         `when`(mMockDataManager.getEventMatch(leagueId, 0))
                 .thenReturn(Single.just(eventMatchResponse))
 
-        mMainPresenter?.getEvent(leagueId, 0)
+        mMatchPresenter?.getEvent(leagueId, 0)
 
-        verify<MainMvpView>(mMockMainMvpView, times(2)).showProgress(anyBoolean())
-        verify<MainMvpView>(mMockMainMvpView).showEventMatch(events)
-        verify<MainMvpView>(mMockMainMvpView, never()).showError("No Data")
+        verify<MatchMvpView>(mMockMatchMvpView, times(2)).showProgress(anyBoolean())
+        verify<MatchMvpView>(mMockMatchMvpView).showEventMatch(events)
+        verify<MatchMvpView>(mMockMatchMvpView, never()).showError("No Data")
 
     }
 
@@ -67,11 +67,11 @@ class MainPresenterTest {
         `when`(mMockDataManager.getEventMatch(leagueId, 0))
                 .thenReturn(Single.error<EventMatchResponse>(Throwable("No Data")))
 
-        mMainPresenter?.getEvent(leagueId, 0)
+        mMatchPresenter?.getEvent(leagueId, 0)
 
-        verify<MainMvpView>(mMockMainMvpView, times(2)).showProgress(anyBoolean())
-        verify<MainMvpView>(mMockMainMvpView).showError("No Data")
-        verify<MainMvpView>(mMockMainMvpView, never()).showEventMatch(eventList)
+        verify<MatchMvpView>(mMockMatchMvpView, times(2)).showProgress(anyBoolean())
+        verify<MatchMvpView>(mMockMatchMvpView).showError("No Data")
+        verify<MatchMvpView>(mMockMatchMvpView, never()).showEventMatch(eventList)
     }
 
 }

@@ -1,4 +1,4 @@
-package net.derohimat.footballschedule.features.main
+package net.derohimat.footballschedule.features.match.main
 
 import android.graphics.Color
 import android.os.Bundle
@@ -21,7 +21,7 @@ import net.derohimat.footballschedule.data.model.EventMatchFav
 import net.derohimat.footballschedule.data.model.League
 import net.derohimat.footballschedule.features.base.BaseActivity
 import net.derohimat.footballschedule.features.common.ErrorView
-import net.derohimat.footballschedule.features.detail.DetailActivity
+import net.derohimat.footballschedule.features.match.detail.DetailMatchMatchActivity
 import org.jetbrains.anko.db.classParser
 import org.jetbrains.anko.db.parseList
 import org.jetbrains.anko.db.select
@@ -30,14 +30,14 @@ import java.util.*
 import javax.inject.Inject
 
 
-class MainActivity : BaseActivity(), MainMvpView, EventAdapter.ClickListener, EventFavAdapter.ClickListener, ErrorView.ErrorListener, AdapterView.OnItemSelectedListener {
+class MatchActivity : BaseActivity(), MatchMvpView, EventAdapter.ClickListener, EventFavAdapter.ClickListener, ErrorView.ErrorListener, AdapterView.OnItemSelectedListener {
 
     @Inject
     lateinit var mEventAdapter: EventAdapter
     @Inject
     lateinit var mEventFavAdapter: EventFavAdapter
     @Inject
-    lateinit var mMainPresenter: MainPresenter
+    lateinit var mMatchPresenter: MatchPresenter
 
     @BindView(R.id.spinner_league)
     @JvmField
@@ -74,7 +74,7 @@ class MainActivity : BaseActivity(), MainMvpView, EventAdapter.ClickListener, Ev
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityComponent().inject(this)
-        mMainPresenter.attachView(this)
+        mMatchPresenter.attachView(this)
 
         setSupportActionBar(mToolbar)
 
@@ -93,7 +93,7 @@ class MainActivity : BaseActivity(), MainMvpView, EventAdapter.ClickListener, Ev
 
         setupBottomNavigation()
 
-        mMainPresenter.getLeague()
+        mMatchPresenter.getLeague()
     }
 
     private fun setupBottomNavigation() {
@@ -115,14 +115,17 @@ class MainActivity : BaseActivity(), MainMvpView, EventAdapter.ClickListener, Ev
         mBottomNavigation?.setOnTabSelectedListener({ position, _ ->
             when (position) {
                 0 -> {
+                    mSpinner?.visibility = View.VISIBLE
                     selectedType = 0
-                    mMainPresenter.getEvent(selectedLeague, selectedType)
+                    mMatchPresenter.getEvent(selectedLeague, selectedType)
                 }
                 1 -> {
+                    mSpinner?.visibility = View.VISIBLE
                     selectedType = 1
-                    mMainPresenter.getEvent(selectedLeague, selectedType)
+                    mMatchPresenter.getEvent(selectedLeague, selectedType)
                 }
                 else -> {
+                    mSpinner?.visibility = View.GONE
                     selectedType = 2
                     showEventMatchFav(getFavorite())
                 }
@@ -136,7 +139,7 @@ class MainActivity : BaseActivity(), MainMvpView, EventAdapter.ClickListener, Ev
 
     override fun onDestroy() {
         super.onDestroy()
-        mMainPresenter.detachView()
+        mMatchPresenter.detachView()
     }
 
     override fun setupAdapter(data: List<League>) {
@@ -196,7 +199,7 @@ class MainActivity : BaseActivity(), MainMvpView, EventAdapter.ClickListener, Ev
     }
 
     override fun onTeamClick(eventId: String, eventName: String) {
-        startActivity(DetailActivity.getStartIntent(this, eventId, eventName))
+        startActivity(DetailMatchMatchActivity.getStartIntent(this, eventId, eventName))
     }
 
     override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -204,12 +207,8 @@ class MainActivity : BaseActivity(), MainMvpView, EventAdapter.ClickListener, Ev
 
     private fun getEvent() {
         when (selectedType) {
-            0 -> {
-                mMainPresenter.getEvent(selectedLeague, selectedType)
-            }
-            1 -> {
-                mMainPresenter.getEvent(selectedLeague, selectedType)
-            }
+            0 -> mMatchPresenter.getEvent(selectedLeague, selectedType)
+            1 -> mMatchPresenter.getEvent(selectedLeague, selectedType)
             else -> {
                 showEventMatchFav(getFavorite())
             }
@@ -240,6 +239,6 @@ class MainActivity : BaseActivity(), MainMvpView, EventAdapter.ClickListener, Ev
     }
 
     override fun onReloadData() {
-        mMainPresenter.getEvent(selectedLeague, selectedType)
+        mMatchPresenter.getEvent(selectedLeague, selectedType)
     }
 }

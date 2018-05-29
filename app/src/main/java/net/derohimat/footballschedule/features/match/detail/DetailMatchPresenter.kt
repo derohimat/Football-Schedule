@@ -1,4 +1,4 @@
-package net.derohimat.footballschedule.features.detail
+package net.derohimat.footballschedule.features.match.detail
 
 import net.derohimat.footballschedule.data.DataManager
 import net.derohimat.footballschedule.data.model.EventMatchResponse
@@ -9,8 +9,8 @@ import net.derohimat.footballschedule.util.rx.scheduler.SchedulerUtils
 import javax.inject.Inject
 
 @ConfigPersistent
-class DetailPresenter @Inject
-constructor(private val mDataManager: DataManager) : BasePresenter<DetailMvpView>() {
+class DetailMatchPresenter @Inject
+constructor(private val mDataManager: DataManager) : BasePresenter<DetailMatchMvpView>() {
 
     fun getEventDetail(eventId: String) {
         checkViewAttached()

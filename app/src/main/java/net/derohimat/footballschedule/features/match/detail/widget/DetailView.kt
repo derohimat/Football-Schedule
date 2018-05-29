@@ -1,4 +1,4 @@
-package net.derohimat.footballschedule.features.detail.widget
+package net.derohimat.footballschedule.features.match.detail.widget
 
 import android.annotation.SuppressLint
 import android.content.Context
