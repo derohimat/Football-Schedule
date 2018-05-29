@@ -1,4 +1,4 @@
-package net.derohimat.footballschedule.features.team
+package net.derohimat.footballschedule.features.team.main
 
 import net.derohimat.footballschedule.data.model.League
 import net.derohimat.footballschedule.data.model.Team

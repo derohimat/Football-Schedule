@@ -23,7 +23,7 @@ import org.jetbrains.anko.db.select
 import org.jetbrains.anko.sdk25.coroutines.onClick
 import timber.log.Timber
 
-class DetailView : LinearLayout {
+class MatchDetailView : LinearLayout {
 
     @BindView(R.id.txt_event_name)
     @JvmField
@@ -113,7 +113,7 @@ class DetailView : LinearLayout {
     private fun init() {
         orientation = LinearLayout.VERTICAL
         gravity = Gravity.CENTER_HORIZONTAL
-        LayoutInflater.from(context).inflate(R.layout.view_detail, this)
+        LayoutInflater.from(context).inflate(R.layout.view_detail_match, this)
         ButterKnife.bind(this)
     }
 
@@ -174,7 +174,7 @@ class DetailView : LinearLayout {
     private fun addToFavorite(database: DatabaseHelper, eventMatch: EventMatch) {
         try {
             database.use {
-                insert("favorite",
+                insert("favorite_match",
                         "idEvent" to eventMatch.idEvent,
                         "event" to eventMatch.event,
                         "dateEvent" to eventMatch.dateEvent,
@@ -192,7 +192,7 @@ class DetailView : LinearLayout {
     private fun removeFromFavorite(database: DatabaseHelper, eventId: String) {
         try {
             database.use {
-                delete("favorite",
+                delete("favorite_match",
                         "(idEvent = {idEvent})",
                         "idEvent" to eventId)
             }
@@ -215,7 +215,7 @@ class DetailView : LinearLayout {
     private fun isFavoriteEvent(database: DatabaseHelper, eventId: String): Boolean {
         var isFavorite = false
         database.use {
-            val result = select("favorite")
+            val result = select("favorite_match")
                     .whereArgs("(idEvent = {idEvent})",
                             "idEvent" to eventId)
             val favorite = result.parseList(classParser<EventMatchFav>())

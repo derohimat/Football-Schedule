@@ -1,4 +1,4 @@
-package net.derohimat.footballschedule.features.team
+package net.derohimat.footballschedule.features.team.main
 
 import android.graphics.Color
 import android.os.Bundle
@@ -7,6 +7,8 @@ import android.support.v7.widget.AppCompatSpinner
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -20,10 +22,12 @@ import net.derohimat.footballschedule.data.model.League
 import net.derohimat.footballschedule.data.model.Team
 import net.derohimat.footballschedule.features.base.BaseActivity
 import net.derohimat.footballschedule.features.common.ErrorView
-import net.derohimat.footballschedule.features.match.detail.DetailMatchMatchActivity
+import net.derohimat.footballschedule.features.match.main.MatchActivity
+import net.derohimat.footballschedule.features.team.detail.DetailTeamActivity
 import org.jetbrains.anko.db.classParser
 import org.jetbrains.anko.db.parseList
 import org.jetbrains.anko.db.select
+import org.jetbrains.anko.startActivity
 import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
@@ -92,7 +96,7 @@ class TeamActivity : BaseActivity(), TeamMvpView, TeamAdapter.ClickListener, Err
     }
 
     private fun setupBottomNavigation() {
-        val item1 = AHBottomNavigationItem(R.string.tab_1, R.drawable.ic_skip_previous_white_24dp, R.color.primary)
+        val item1 = AHBottomNavigationItem(R.string.team_tab_1, R.drawable.ic_team_24dp, R.color.primary)
         val item2 = AHBottomNavigationItem(R.string.tab_3, R.drawable.ic_favorite_white_24dp, R.color.primary)
 
         mBottomNavigation?.addItem(item1)
@@ -174,8 +178,8 @@ class TeamActivity : BaseActivity(), TeamMvpView, TeamAdapter.ClickListener, Err
         Timber.e(message)
     }
 
-    override fun onTeamClick(eventId: String, eventName: String) {
-        startActivity(DetailMatchMatchActivity.getStartIntent(this, eventId, eventName))
+    override fun onTeamClick(teamId: String, teamName: String) {
+        startActivity(DetailTeamActivity.getStartIntent(this, teamId, teamName))
     }
 
     override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -214,5 +218,22 @@ class TeamActivity : BaseActivity(), TeamMvpView, TeamAdapter.ClickListener, Err
 
     override fun onReloadData() {
         mTeamPresenter.getTeams(selectedLeague)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.team_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle item selection
+        return when (item.itemId) {
+            R.id.action_match -> {
+                startActivity<MatchActivity>()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 }

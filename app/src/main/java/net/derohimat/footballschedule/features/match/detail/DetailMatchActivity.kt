@@ -14,11 +14,11 @@ import net.derohimat.footballschedule.data.model.EventMatch
 import net.derohimat.footballschedule.data.model.Team
 import net.derohimat.footballschedule.features.base.BaseActivity
 import net.derohimat.footballschedule.features.common.ErrorView
-import net.derohimat.footballschedule.features.match.detail.widget.DetailView
+import net.derohimat.footballschedule.features.match.detail.widget.MatchDetailView
 import timber.log.Timber
 import javax.inject.Inject
 
-class DetailMatchMatchActivity : BaseActivity(), DetailMatchMvpView, ErrorView.ErrorListener {
+class DetailMatchActivity : BaseActivity(), DetailMatchMvpView, ErrorView.ErrorListener {
 
     @Inject
     lateinit var mDetailMatchPresenter: DetailMatchPresenter
@@ -39,7 +39,7 @@ class DetailMatchMatchActivity : BaseActivity(), DetailMatchMvpView, ErrorView.E
     @JvmField
     var mTeamLayout: LinearLayout? = null
 
-    lateinit var detailView: DetailView
+    lateinit var matchDetailView: MatchDetailView
 
     private var mEventId: String? = null
     private var mEventName: String? = null
@@ -70,16 +70,16 @@ class DetailMatchMatchActivity : BaseActivity(), DetailMatchMvpView, ErrorView.E
 
     override fun showEvent(eventMatch: EventMatch) {
         mTeamLayout?.visibility = View.VISIBLE
-        detailView = DetailView(this)
-        detailView.setEvent(eventMatch, database)
-        mTeamLayout?.addView(detailView)
+        matchDetailView = MatchDetailView(this)
+        matchDetailView.setEvent(eventMatch, database)
+        mTeamLayout?.addView(matchDetailView)
 
         eventMatch.idHomeTeam?.let { mDetailMatchPresenter.getTeamDetail(it, 0) }
         eventMatch.idAwayTeam?.let { mDetailMatchPresenter.getTeamDetail(it, 1) }
     }
 
     override fun showTeam(team: Team, type: Int) {
-        detailView.setImage(team.teamBadge, type)
+        matchDetailView.setImage(team.teamBadge, type)
     }
 
     override fun showProgress(show: Boolean) {
@@ -108,7 +108,7 @@ class DetailMatchMatchActivity : BaseActivity(), DetailMatchMvpView, ErrorView.E
         const val EXTRA_NAME = "EXTRA_NAME"
 
         fun getStartIntent(context: Context, eventId: String, teamName: String): Intent {
-            val intent = Intent(context, DetailMatchMatchActivity::class.java)
+            val intent = Intent(context, DetailMatchActivity::class.java)
             intent.putExtra(EXTRA_ID, eventId)
             intent.putExtra(EXTRA_NAME, teamName)
             return intent

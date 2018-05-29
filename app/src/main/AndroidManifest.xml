@@ -15,6 +15,7 @@
         <activity
             android:name=".features.match.main.MatchActivity"
             android:label="@string/app_name"
+            android:launchMode="singleInstance"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -23,10 +24,16 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".features.match.detail.DetailMatchMatchActivity"
+            android:name=".features.match.detail.DetailMatchActivity"
+            android:launchMode="singleInstance"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
-            android:name=".features.team.TeamActivity"
+            android:name=".features.team.main.TeamActivity"
+            android:launchMode="singleInstance"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".features.team.detail.DetailTeamActivity"
+            android:launchMode="singleInstance"
             android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 

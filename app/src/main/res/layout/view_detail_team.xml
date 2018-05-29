@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+       xmlns:tools="http://schemas.android.com/tools"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:gravity="center_horizontal"
+       tools:orientation="vertical"
+       tools:parentTag="android.widget.LinearLayout">
+
+
+    <ImageView
+        android:id="@+id/img_badge"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_margin="16dp"
+        tools:src="@mipmap/ic_launcher"/>
+
+    <TextView
+        android:id="@+id/txt_team_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_headline"
+        tools:text="Team Name"/>
+
+    <TextView
+        android:id="@+id/txt_favorite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="?android:selectableItemBackgroundBorderless"
+        android:text="@string/add_to_favorite"
+        android:textColor="@color/accent"
+        android:textSize="@dimen/text_body"/>
+
+    <TextView
+        android:id="@+id/txt_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="8dp"
+        android:textSize="@dimen/text_body"
+        tools:text="Pol, a bene scutum.Finiss ridetis!Est regius devirginato, cesaris.Nunquam amor planeta.Pol, epos!Plasmators unda in tolosa!Cum habena ire, omnes compateres promissio gratis, bassus candidatuses.Stella, lamia, et clabulare.Resistentias sunt turpiss de barbatus lactea.Vita de pius olla, visum cedrium!Orgia de audax calcaria, transferre ratione!Cantare hic ducunt ad altus pars.Spatii resisteres, tanquam festus guttus.Prarere superbe ducunt ad bassus armarium.Cursuss tolerare in tubinga!Eheu.Nobilis, lotus verpas recte experientia de castus, clemens epos.Resistentias accelerare in tolosa!Quadra, axona, et index.Secundus, emeritis domuss superbe captis de pius, noster repressor.Pol, a bene turpis.Hippotoxota noster demissio est.Vae, victrix!Cum lumen observare, omnes compateres reperire bassus, varius nutrixes.Bassus competitions ducunt ad danista.A falsis, contencio teres mensa.Abactus accelerares, tanquam fortis absolutio.Ubi est pius adiurator?Indictios favere in vasa!Barbatus messor semper acquireres cannabis est.Est bassus luba, cesaris.Ubi est azureus itineris tramitem?Nunquam quaestio idoleum."/>
+
+</merge>

@@ -1,4 +1,4 @@
-package net.derohimat.footballschedule.features.team
+package net.derohimat.footballschedule.features.team.main
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -55,7 +55,7 @@ constructor() : RecyclerView.Adapter<TeamAdapter.EventViewHolder>() {
     }
 
     interface ClickListener {
-        fun onTeamClick(eventId: String, eventName: String)
+        fun onTeamClick(teamId: String, teamName: String)
     }
 
     inner class EventViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

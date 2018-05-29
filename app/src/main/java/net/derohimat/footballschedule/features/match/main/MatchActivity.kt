@@ -7,6 +7,8 @@ import android.support.v7.widget.AppCompatSpinner
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -21,10 +23,12 @@ import net.derohimat.footballschedule.data.model.EventMatchFav
 import net.derohimat.footballschedule.data.model.League
 import net.derohimat.footballschedule.features.base.BaseActivity
 import net.derohimat.footballschedule.features.common.ErrorView
-import net.derohimat.footballschedule.features.match.detail.DetailMatchMatchActivity
+import net.derohimat.footballschedule.features.match.detail.DetailMatchActivity
+import net.derohimat.footballschedule.features.team.main.TeamActivity
 import org.jetbrains.anko.db.classParser
 import org.jetbrains.anko.db.parseList
 import org.jetbrains.anko.db.select
+import org.jetbrains.anko.startActivity
 import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
@@ -199,7 +203,7 @@ class MatchActivity : BaseActivity(), MatchMvpView, EventAdapter.ClickListener, 
     }
 
     override fun onTeamClick(eventId: String, eventName: String) {
-        startActivity(DetailMatchMatchActivity.getStartIntent(this, eventId, eventName))
+        startActivity(DetailMatchActivity.getStartIntent(this, eventId, eventName))
     }
 
     override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -226,7 +230,7 @@ class MatchActivity : BaseActivity(), MatchMvpView, EventAdapter.ClickListener, 
 
     private fun getFavorite(): List<EventMatchFav> {
         return database.use {
-            select("favorite").exec {
+            select("favorite_match").exec {
                 parseList(classParser())
             }
         }
@@ -240,5 +244,22 @@ class MatchActivity : BaseActivity(), MatchMvpView, EventAdapter.ClickListener, 
 
     override fun onReloadData() {
         mMatchPresenter.getEvent(selectedLeague, selectedType)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.match_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle item selection
+        return when (item.itemId) {
+            R.id.action_team -> {
+                startActivity<TeamActivity>()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 }

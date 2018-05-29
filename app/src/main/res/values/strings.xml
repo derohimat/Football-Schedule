@@ -20,4 +20,8 @@
     <string name="remove_from_favorite">Remove From Favorite</string>
     <string name="test">Test</string>
 
+    <string name="team_tab_1">Teams</string>
+    <string name="list_team">Teams</string>
+    <string name="match">Match</string>
+
 </resources>
