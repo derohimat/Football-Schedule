@@ -87,10 +87,10 @@ class DetailActivity : BaseActivity(), DetailMvpView, ErrorView.ErrorListener {
         mProgress?.visibility = if (show) View.VISIBLE else View.GONE
     }
 
-    override fun showError(error: Throwable) {
+    override fun showError(message: String) {
         mTeamLayout?.visibility = View.GONE
         mErrorView?.visibility = View.VISIBLE
-        Timber.e(error, "There was a problem retrieving data...")
+        Timber.e(message)
     }
 
     override fun onReloadData() {

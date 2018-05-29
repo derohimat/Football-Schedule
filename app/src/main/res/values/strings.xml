@@ -6,7 +6,7 @@
 
     <!-- Error View -->
     <string name="error_title">Oops</string>
-    <string name="error_message">There was a problem loading the eventMatch, please try again!</string>
+    <string name="error_message">There was a problem loading the eventList, please try again!</string>
     <string name="error_reload">Reload</string>
 
     <!-- Main Tab -->

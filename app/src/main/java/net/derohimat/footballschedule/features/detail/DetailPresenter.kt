@@ -1,7 +1,7 @@
 package net.derohimat.footballschedule.features.detail
 
 import net.derohimat.footballschedule.data.DataManager
-import net.derohimat.footballschedule.data.model.EventMatch
+import net.derohimat.footballschedule.data.model.EventMatchResponse
 import net.derohimat.footballschedule.data.model.Team
 import net.derohimat.footballschedule.features.base.BasePresenter
 import net.derohimat.footballschedule.injection.ConfigPersistent
@@ -16,13 +16,17 @@ constructor(private val mDataManager: DataManager) : BasePresenter<DetailMvpView
         checkViewAttached()
         mvpView?.showProgress(true)
         mDataManager.getEventDetail(eventId)
-                .compose<EventMatch>(SchedulerUtils.ioToMain<EventMatch>())
+                .compose<EventMatchResponse>(SchedulerUtils.ioToMain<EventMatchResponse>())
                 .subscribe({ eventMatch ->
                     mvpView?.showProgress(false)
-                    mvpView?.showEvent(eventMatch)
+                    if (eventMatch.events != null) {
+                        mvpView?.showEvent(eventMatch.events.first())
+                    } else {
+                        mvpView?.showError("No Data")
+                    }
                 }) { throwable ->
                     mvpView?.showProgress(false)
-                    mvpView?.showError(throwable)
+                    mvpView?.showError(throwable.message.toString())
                 }
     }
 
@@ -36,7 +40,7 @@ constructor(private val mDataManager: DataManager) : BasePresenter<DetailMvpView
                     mvpView?.showTeam(team, type)
                 }) { throwable ->
                     mvpView?.showProgress(false)
-                    mvpView?.showError(throwable)
+                    mvpView?.showError(throwable.message.toString())
                 }
     }
 }

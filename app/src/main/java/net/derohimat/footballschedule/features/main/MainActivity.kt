@@ -188,11 +188,11 @@ class MainActivity : BaseActivity(), MainMvpView, EventAdapter.ClickListener, Ev
         }
     }
 
-    override fun showError(error: Throwable) {
+    override fun showError(message: String) {
         mRecycler?.visibility = View.GONE
         mSwipeRefreshLayout?.visibility = View.GONE
         mErrorView?.visibility = View.VISIBLE
-        Timber.e(error, "There was an error retrieving data")
+        Timber.e(message)
     }
 
     override fun onTeamClick(eventId: String, eventName: String) {

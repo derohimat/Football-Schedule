@@ -3,7 +3,6 @@ package net.derohimat.footballschedule
 import io.reactivex.Single
 import net.derohimat.footballschedule.common.TestDataFactory
 import net.derohimat.footballschedule.data.DataManager
-import net.derohimat.footballschedule.data.model.EventMatch
 import net.derohimat.footballschedule.data.model.EventMatchResponse
 import net.derohimat.footballschedule.features.main.MainMvpView
 import net.derohimat.footballschedule.features.main.MainPresenter
@@ -13,7 +12,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.anyBoolean
 import org.mockito.Mock
 import org.mockito.Mockito.*
@@ -46,29 +44,34 @@ class MainPresenterTest {
     @Test
     @Throws(Exception::class)
     fun getEventTest() {
-        val pokemonList = TestDataFactory.makeEventMatchResponse(10)
-        `when`(mMockDataManager.getEventMatch("4328", 1))
-                .thenReturn(Single.just(pokemonList))
+        val eventMatchResponse = TestDataFactory.makeEventMatchResponse()
+        val events = eventMatchResponse.events
+        val leagueId = "4328"
+        `when`(mMockDataManager.getEventMatch(leagueId, 0))
+                .thenReturn(Single.just(eventMatchResponse))
 
-        mMainPresenter?.getEvent("4328", 1)
+        mMainPresenter?.getEvent(leagueId, 0)
 
         verify<MainMvpView>(mMockMainMvpView, times(2)).showProgress(anyBoolean())
-        verify<MainMvpView>(mMockMainMvpView).showEventMatch(pokemonList.events)
-        verify<MainMvpView>(mMockMainMvpView, never()).showError(RuntimeException())
+        verify<MainMvpView>(mMockMainMvpView).showEventMatch(events)
+        verify<MainMvpView>(mMockMainMvpView, never()).showError("No Data")
 
     }
 
     @Test
     @Throws(Exception::class)
     fun getEventReturnsError() {
-        `when`(mMockDataManager.getEventMatch("4328", 1))
-                .thenReturn(Single.error<EventMatchResponse>(RuntimeException()))
+        val eventList = TestDataFactory.makeEventList()
+        val leagueId = "123123"
 
-        mMainPresenter?.getEvent("4328", 1)
+        `when`(mMockDataManager.getEventMatch(leagueId, 0))
+                .thenReturn(Single.error<EventMatchResponse>(Throwable("No Data")))
+
+        mMainPresenter?.getEvent(leagueId, 0)
 
         verify<MainMvpView>(mMockMainMvpView, times(2)).showProgress(anyBoolean())
-//        verify<MainMvpView>(mMockMainMvpView).showError(RuntimeException())
-        verify<MainMvpView>(mMockMainMvpView, never()).showEventMatch(ArgumentMatchers.anyList<EventMatch>())
+        verify<MainMvpView>(mMockMainMvpView).showError("No Data")
+        verify<MainMvpView>(mMockMainMvpView, never()).showEventMatch(eventList)
     }
 
 }

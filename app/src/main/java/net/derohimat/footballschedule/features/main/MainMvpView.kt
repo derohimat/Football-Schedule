@@ -17,6 +17,6 @@ interface MainMvpView : MvpView {
 
     fun showProgress(show: Boolean)
 
-    fun showError(error: Throwable)
+    fun showError(message: String)
 
 }

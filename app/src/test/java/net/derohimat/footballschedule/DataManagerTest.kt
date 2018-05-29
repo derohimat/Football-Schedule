@@ -3,15 +3,12 @@ package net.derohimat.footballschedule
 import io.reactivex.Single
 import net.derohimat.footballschedule.common.TestDataFactory
 import net.derohimat.footballschedule.data.DataManager
-import net.derohimat.footballschedule.data.model.EventMatchResponse
 import net.derohimat.footballschedule.data.remote.FootBallApi
 import net.derohimat.footballschedule.util.RxSchedulersOverrideRule
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentMatchers.anyInt
-import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
@@ -24,39 +21,40 @@ class DataManagerTest {
     val mOverrideSchedulersRule = RxSchedulersOverrideRule()
     @Mock
     private
-    lateinit var mMockPokemonApi: FootBallApi
+    lateinit var mMockFootBallApi: FootBallApi
 
     private var mDataManager: DataManager? = null
 
     @Before
     fun setUp() {
-        mDataManager = DataManager(mMockPokemonApi)
+        mDataManager = DataManager(mMockFootBallApi)
     }
 
     @Test
-    fun getEventListCompletesAndEmitsEventList() {
-        val eventMatchResponse = TestDataFactory.makeEventMatchResponse(5)
-        val eventListResponse = EventMatchResponse(eventMatchResponse.events)
+    fun getEventsTest() {
+        val id = "4328"
+        val eventMatchResponse = TestDataFactory.makeEventMatchResponse()
 
-        `when`(mMockPokemonApi.getEventDetail(anyString()))
-                .thenReturn(Single.just(eventListResponse))
+        `when`(mMockFootBallApi.getEventDetail(id))
+                .thenReturn(Single.just(eventMatchResponse))
 
-        mDataManager?.getEventMatch("4328", 1)
+        mDataManager?.getEventDetail(id)
                 ?.test()
                 ?.assertComplete()
-                ?.assertValue(TestDataFactory.makeEventMatchResponse(10))
+                ?.assertValue(TestDataFactory.makeEventMatchResponse())
     }
 
     @Test
-    fun getEventsCompletesAndEmitsEvents() {
-        val id = anyInt()
-        val eventMatch = TestDataFactory.makeEventMatchResponse(id)
-        `when`(mMockPokemonApi.getEventDetail(anyString()))
-                .thenReturn(Single.just(eventMatch))
+    fun getEventDetailTest() {
+        val eventMatchResponse = TestDataFactory.makeEventMatchResponse()
+        val id = "441613"
 
-        mDataManager?.getEventDetail(id.toString())
+        `when`(mMockFootBallApi.getEventDetail(id))
+                .thenReturn(Single.just(eventMatchResponse))
+
+        mDataManager?.getEventDetail(id)
                 ?.test()
                 ?.assertComplete()
-                ?.assertValue(TestDataFactory.makeEventDetail(id.toString()))
+                ?.assertValue(TestDataFactory.makeEventMatchResponse())
     }
 }

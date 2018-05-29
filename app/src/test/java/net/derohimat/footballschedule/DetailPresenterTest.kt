@@ -1,9 +1,9 @@
 package net.derohimat.footballschedule
 
-import io.reactivex.Observable
+import io.reactivex.Single
 import net.derohimat.footballschedule.common.TestDataFactory
 import net.derohimat.footballschedule.data.DataManager
-import net.derohimat.footballschedule.data.model.EventMatch
+import net.derohimat.footballschedule.data.model.EventMatchResponse
 import net.derohimat.footballschedule.features.detail.DetailMvpView
 import net.derohimat.footballschedule.features.detail.DetailPresenter
 import net.derohimat.footballschedule.util.RxSchedulersOverrideRule
@@ -13,7 +13,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyBoolean
-import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.Mockito.*
 import org.mockito.MockitoAnnotations
@@ -46,27 +45,49 @@ class DetailPresenterTest {
 
     @Test
     @Throws(Exception::class)
-    fun getEventDetailReturnsEventDetail() {
-        val eventMatch = TestDataFactory.makeEventDetail("441613")
-        `when`(mMockDataManager.getEventDetail(anyString()))
-                .thenReturn(Observable.just(eventMatch))
+    fun getEventDetail() {
+        val eventMatchResponse = TestDataFactory.makeEventMatchResponse()
+        val event = TestDataFactory.makeEventDetail()
+        val id = "441613"
+        when {
+            eventMatchResponse.events.isNotEmpty() ->
+                `when`(mMockDataManager.getEventDetail(id))
+                        .thenReturn(Single.just(eventMatchResponse))
+            else ->
+                `when`(mMockDataManager.getEventDetail(id))
+                        .thenReturn(Single.error<EventMatchResponse>(Throwable("No Data")))
+        }
 
-        mDetailPresenter?.getEventDetail(anyString())
+        mDetailPresenter?.getEventDetail(id)
 
         verify<DetailMvpView>(mMockDetailMvpView, times(2)).showProgress(anyBoolean())
-        verify<DetailMvpView>(mMockDetailMvpView).showEvent(eventMatch)
-        verify<DetailMvpView>(mMockDetailMvpView, never()).showError(RuntimeException())
+        when {
+            eventMatchResponse.events.isNotEmpty() -> {
+                verify<DetailMvpView>(mMockDetailMvpView).showEvent(event)
+                verify<DetailMvpView>(mMockDetailMvpView, never()).showError("No Data")
+            }
+            else -> {
+                verify<DetailMvpView>(mMockDetailMvpView).showError("No Data")
+                verify<DetailMvpView>(mMockDetailMvpView, never()).showEvent(event)
+            }
+
+        }
     }
 
     @Test
     @Throws(Exception::class)
     fun getEventDetailReturnsError() {
-        `when`(mMockDataManager.getEventDetail("441613"))
-                .thenReturn(Observable.error<EventMatch>(RuntimeException()))
+        val event = TestDataFactory.makeEventDetail()
+        val id = "123213"
 
-        mDetailPresenter?.getEventDetail("441613")
+        `when`(mMockDataManager.getEventDetail(id))
+                .thenReturn(Single.error<EventMatchResponse>(Throwable("No Data")))
+
+        mDetailPresenter?.getEventDetail(id)
 
         verify<DetailMvpView>(mMockDetailMvpView, times(2)).showProgress(anyBoolean())
+        verify<DetailMvpView>(mMockDetailMvpView).showError("No Data")
+        verify<DetailMvpView>(mMockDetailMvpView, never()).showEvent(event)
     }
 
 }

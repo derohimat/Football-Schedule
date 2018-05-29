@@ -22,7 +22,7 @@ constructor(private val mDataManager: DataManager) : BasePresenter<MainMvpView>(
                     mvpView?.setupAdapter(teams)
                 }) { throwable ->
                     mvpView?.showProgress(false)
-                    mvpView?.showError(throwable)
+                    mvpView?.showError(throwable.message.toString())
                 }
     }
 
@@ -40,7 +40,7 @@ constructor(private val mDataManager: DataManager) : BasePresenter<MainMvpView>(
                     }
                 }) { throwable ->
                     mvpView?.showProgress(false)
-                    mvpView?.showError(throwable)
+                    mvpView?.showError(throwable.message.toString())
                 }
     }
 
