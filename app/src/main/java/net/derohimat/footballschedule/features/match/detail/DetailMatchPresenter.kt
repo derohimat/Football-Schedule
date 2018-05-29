@@ -2,7 +2,7 @@ package net.derohimat.footballschedule.features.match.detail
 
 import net.derohimat.footballschedule.data.DataManager
 import net.derohimat.footballschedule.data.model.EventMatchResponse
-import net.derohimat.footballschedule.data.model.Team
+import net.derohimat.footballschedule.data.model.TeamDetail
 import net.derohimat.footballschedule.features.base.BasePresenter
 import net.derohimat.footballschedule.injection.ConfigPersistent
 import net.derohimat.footballschedule.util.rx.scheduler.SchedulerUtils
@@ -34,7 +34,7 @@ constructor(private val mDataManager: DataManager) : BasePresenter<DetailMatchMv
         checkViewAttached()
         mvpView?.showProgress(true)
         mDataManager.getTeamDetail(teamId)
-                .compose<Team>(SchedulerUtils.ioToMain<Team>())
+                .compose<TeamDetail>(SchedulerUtils.ioToMain<TeamDetail>())
                 .subscribe({ team ->
                     mvpView?.showProgress(false)
                     mvpView?.showTeam(team, type)

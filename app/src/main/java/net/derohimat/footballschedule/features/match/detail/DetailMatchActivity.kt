@@ -11,7 +11,7 @@ import butterknife.BindView
 import net.derohimat.footballschedule.R
 import net.derohimat.footballschedule.data.db.database
 import net.derohimat.footballschedule.data.model.EventMatch
-import net.derohimat.footballschedule.data.model.Team
+import net.derohimat.footballschedule.data.model.TeamDetail
 import net.derohimat.footballschedule.features.base.BaseActivity
 import net.derohimat.footballschedule.features.common.ErrorView
 import net.derohimat.footballschedule.features.match.detail.widget.MatchDetailView
@@ -78,7 +78,7 @@ class DetailMatchActivity : BaseActivity(), DetailMatchMvpView, ErrorView.ErrorL
         eventMatch.idAwayTeam?.let { mDetailMatchPresenter.getTeamDetail(it, 1) }
     }
 
-    override fun showTeam(team: Team, type: Int) {
+    override fun showTeam(team: TeamDetail, type: Int) {
         matchDetailView.setImage(team.teamBadge, type)
     }
 

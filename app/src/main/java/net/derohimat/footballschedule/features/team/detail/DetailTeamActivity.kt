@@ -4,13 +4,15 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.Toolbar
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import butterknife.BindView
 import net.derohimat.footballschedule.R
 import net.derohimat.footballschedule.data.db.database
-import net.derohimat.footballschedule.data.model.Team
+import net.derohimat.footballschedule.data.model.TeamDetail
 import net.derohimat.footballschedule.features.base.BaseActivity
 import net.derohimat.footballschedule.features.common.ErrorView
 import net.derohimat.footballschedule.features.team.detail.widget.TeamDetailView
@@ -67,7 +69,7 @@ class DetailTeamActivity : BaseActivity(), DetailTeamMvpView, ErrorView.ErrorLis
     override val layout: Int
         get() = R.layout.activity_detail
 
-    override fun showTeam(team: Team) {
+    override fun showTeam(team: TeamDetail) {
         mTeamLayout?.visibility = View.VISIBLE
         teamDetailView = TeamDetailView(this)
         teamDetailView.setTeam(team, database)
@@ -104,6 +106,24 @@ class DetailTeamActivity : BaseActivity(), DetailTeamMvpView, ErrorView.ErrorLis
             intent.putExtra(EXTRA_ID, teamId)
             intent.putExtra(EXTRA_NAME, teamName)
             return intent
+        }
+    }
+
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.detail_team_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle item selection
+        return when (item.itemId) {
+            R.id.action_player -> {
+//                startActivity<MatchActivity>()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 }

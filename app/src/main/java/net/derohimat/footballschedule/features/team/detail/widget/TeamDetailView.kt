@@ -14,6 +14,7 @@ import butterknife.ButterKnife
 import net.derohimat.footballschedule.R
 import net.derohimat.footballschedule.data.db.DatabaseHelper
 import net.derohimat.footballschedule.data.model.Team
+import net.derohimat.footballschedule.data.model.TeamDetail
 import net.derohimat.footballschedule.util.loadImageFromUrl
 import org.jetbrains.anko.db.classParser
 import org.jetbrains.anko.db.delete
@@ -33,6 +34,12 @@ class TeamDetailView : LinearLayout {
     @BindView(R.id.txt_favorite)
     @JvmField
     var txtFavorite: TextView? = null
+    @BindView(R.id.txt_manager)
+    @JvmField
+    var txtManager: TextView? = null
+    @BindView(R.id.txt_stadium)
+    @JvmField
+    var txtStadium: TextView? = null
     @BindView(R.id.img_badge)
     @JvmField
     var imgBadge: ImageView? = null
@@ -60,20 +67,23 @@ class TeamDetailView : LinearLayout {
     }
 
     @SuppressLint("SetTextI18n")
-    fun setTeam(team: Team, dbHelper: DatabaseHelper) {
+    fun setTeam(team: TeamDetail, dbHelper: DatabaseHelper) {
         this.database = dbHelper
-        txtName?.text = team.teamName.substring(0, 1).toUpperCase() + team.teamName.substring(1)
+        txtName?.text = team.team.substring(0, 1).toUpperCase() + team.team.substring(1)
+        txtDescription?.text = team.descriptionEN
+        txtManager?.text = team.manager
+        txtStadium?.text = team.stadium
 
         imgBadge?.loadImageFromUrl(team.teamBadge)
 
-        isFavorite = isFavoriteEvent(dbHelper, team.teamId)
+        isFavorite = isFavoriteEvent(dbHelper, team.idTeam)
 
         checkFavorite()
 
         txtFavorite?.onClick {
             when {
                 isFavorite -> {
-                    removeFromFavorite(database, team.teamId)
+                    removeFromFavorite(database, team.idTeam)
                     isFavorite = false
                     checkFavorite()
                 }
@@ -86,12 +96,12 @@ class TeamDetailView : LinearLayout {
         }
     }
 
-    private fun addToFavorite(database: DatabaseHelper, team: Team) {
+    private fun addToFavorite(database: DatabaseHelper, team: TeamDetail) {
         try {
             database.use {
                 insert("favorite_team",
-                        "idTeam" to team.teamId,
-                        "strTeam" to team.teamName,
+                        "idTeam" to team.idTeam,
+                        "strTeam" to team.team,
                         "strTeamBadge" to team.teamBadge
                 )
             }
