@@ -131,6 +131,8 @@ dependencies {
     implementation "com.google.dagger:dagger:$versions.dagger"
     compileOnly 'org.glassfish:javax.annotation:10.0-b28' //Required by Dagger2
 
+    implementation 'com.miguelcatalan:materialsearchview:1.4.0'
+
     debugImplementation leakCannary
     releaseImplementation leakCannary
     testImplementation leakCannary

@@ -1,12 +1,16 @@
 package net.derohimat.footballschedule.features.match.main
 
+import android.app.Activity
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.speech.RecognizerIntent
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.AppCompatSpinner
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
+import android.text.TextUtils
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -16,6 +20,7 @@ import android.widget.ProgressBar
 import butterknife.BindView
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem
+import com.miguelcatalan.materialsearchview.MaterialSearchView
 import net.derohimat.footballschedule.R
 import net.derohimat.footballschedule.data.db.database
 import net.derohimat.footballschedule.data.model.EventMatch
@@ -32,7 +37,6 @@ import org.jetbrains.anko.startActivity
 import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
-
 
 class MatchActivity : BaseActivity(), MatchMvpView, EventAdapter.ClickListener, EventFavAdapter.ClickListener, ErrorView.ErrorListener, AdapterView.OnItemSelectedListener {
 
@@ -67,6 +71,10 @@ class MatchActivity : BaseActivity(), MatchMvpView, EventAdapter.ClickListener, 
     @JvmField
     var mBottomNavigation: AHBottomNavigation? = null
 
+    @BindView(R.id.search_view)
+    @JvmField
+    var mSearchView: MaterialSearchView? = null
+
     @BindView(R.id.toolbar)
     @JvmField
     var mToolbar: Toolbar? = null
@@ -97,8 +105,34 @@ class MatchActivity : BaseActivity(), MatchMvpView, EventAdapter.ClickListener, 
         mSpinner?.onItemSelectedListener = this
 
         setupBottomNavigation()
+        setupSearchView()
 
         mMatchPresenter.getLeague()
+    }
+
+    private fun setupSearchView() {
+        mSearchView?.setOnQueryTextListener(object : MaterialSearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                //Do some magic
+                mMatchPresenter.searchEvent(query)
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String): Boolean {
+                //Do some magic
+                return false
+            }
+        })
+
+        mSearchView?.setOnSearchViewListener(object : MaterialSearchView.SearchViewListener {
+            override fun onSearchViewShown() {
+                //Do some magic
+            }
+
+            override fun onSearchViewClosed() {
+                //Do some magic
+            }
+        })
     }
 
     private fun setupBottomNavigation() {
@@ -247,9 +281,34 @@ class MatchActivity : BaseActivity(), MatchMvpView, EventAdapter.ClickListener, 
         mMatchPresenter.getEvent(selectedLeague, selectedType)
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+        if (requestCode == MaterialSearchView.REQUEST_VOICE && resultCode == Activity.RESULT_OK) {
+            val matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+            if (matches != null && matches.size > 0) {
+                val searchWrd = matches[0]
+                if (!TextUtils.isEmpty(searchWrd)) {
+                    mSearchView?.setQuery(searchWrd, false)
+                }
+            }
+            return
+        }
+        super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    override fun onBackPressed() {
+        if (mSearchView != null  && mSearchView!!.isSearchOpen) {
+            mSearchView?.closeSearch()
+        } else {
+            super.onBackPressed()
+        }
+    }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.match_menu, menu)
+
+        val item = menu.findItem(R.id.action_search)
+        mSearchView?.setMenuItem(item)
         return true
     }
 

@@ -43,6 +43,10 @@ constructor(private val mFootBallApi: FootBallApi) {
         }
     }
 
+    fun searchEvent(query: String): Single<SearchEventMatchResponse> {
+        return mFootBallApi.searchEvent(query)
+    }
+
     fun getEventDetail(eventId: String): Single<EventMatchResponse> {
         return mFootBallApi.getEventDetail(eventId)
     }
