@@ -76,7 +76,10 @@ class TeamActivity : BaseActivity(), TeamMvpView, TeamAdapter.ClickListener, Err
         activityComponent().inject(this)
         mTeamPresenter.attachView(this)
 
+        mToolbar?.title = "Teams"
         setSupportActionBar(mToolbar)
+        val actionBar = supportActionBar
+        actionBar?.setDisplayHomeAsUpEnabled(true)
 
         mSwipeRefreshLayout?.setProgressBackgroundColorSchemeResource(R.color.primary)
         mSwipeRefreshLayout?.setColorSchemeResources(R.color.white)

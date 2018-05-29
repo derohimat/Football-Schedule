@@ -80,6 +80,7 @@ class MatchActivity : BaseActivity(), MatchMvpView, EventAdapter.ClickListener, 
         activityComponent().inject(this)
         mMatchPresenter.attachView(this)
 
+        mToolbar?.title = "Matches"
         setSupportActionBar(mToolbar)
 
         mSwipeRefreshLayout?.setProgressBackgroundColorSchemeResource(R.color.primary)

@@ -27,6 +27,13 @@ constructor(private val mFootBallApi: FootBallApi) {
                 .toList()
     }
 
+    fun getPlayerList(teamName: String): Single<List<Player>> {
+        return mFootBallApi.getPlayers(teamName)
+                .toObservable()
+                .flatMapIterable { playerResponse -> playerResponse.player }
+                .toList()
+    }
+
     fun getEventMatch(leagueId: String, type: Int): Single<EventMatchResponse> {
         return when (type) {
             0 -> mFootBallApi.getPrevMatch(leagueId)

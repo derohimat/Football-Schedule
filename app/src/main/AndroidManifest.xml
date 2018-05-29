@@ -35,6 +35,10 @@
             android:name=".features.team.detail.DetailTeamActivity"
             android:launchMode="singleInstance"
             android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".features.player.list.PlayerActivity"
+            android:launchMode="singleInstance"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

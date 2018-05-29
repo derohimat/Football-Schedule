@@ -15,6 +15,7 @@ import net.derohimat.footballschedule.data.db.database
 import net.derohimat.footballschedule.data.model.TeamDetail
 import net.derohimat.footballschedule.features.base.BaseActivity
 import net.derohimat.footballschedule.features.common.ErrorView
+import net.derohimat.footballschedule.features.player.list.PlayerActivity
 import net.derohimat.footballschedule.features.team.detail.widget.TeamDetailView
 import timber.log.Timber
 import javax.inject.Inject
@@ -117,10 +118,9 @@ class DetailTeamActivity : BaseActivity(), DetailTeamMvpView, ErrorView.ErrorLis
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle item selection
         return when (item.itemId) {
             R.id.action_player -> {
-//                startActivity<MatchActivity>()
+                startActivity(PlayerActivity.getStartIntent(this, mTeamName as String))
                 true
             }
             else -> super.onOptionsItemSelected(item)
