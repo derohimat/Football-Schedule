@@ -1,16 +1,16 @@
-package net.derohimat.footballschedule.features.match.main
+package net.derohimat.footballschedule.features.team
 
 import net.derohimat.footballschedule.data.DataManager
-import net.derohimat.footballschedule.data.model.EventMatchResponse
 import net.derohimat.footballschedule.data.model.League
+import net.derohimat.footballschedule.data.model.Team
 import net.derohimat.footballschedule.features.base.BasePresenter
 import net.derohimat.footballschedule.injection.ConfigPersistent
 import net.derohimat.footballschedule.util.rx.scheduler.SchedulerUtils
 import javax.inject.Inject
 
 @ConfigPersistent
-class MatchPresenter @Inject
-constructor(private val mDataManager: DataManager) : BasePresenter<MatchMvpView>() {
+class TeamPresenter @Inject
+constructor(private val mDataManager: DataManager) : BasePresenter<TeamMvpView>() {
 
     fun getLeague() {
         checkViewAttached()
@@ -26,18 +26,14 @@ constructor(private val mDataManager: DataManager) : BasePresenter<MatchMvpView>
                 }
     }
 
-    fun getEvent(leagueId: String, type: Int) {
+    fun getTeams(leagueId: String) {
         checkViewAttached()
         mvpView?.showProgress(true)
-        mDataManager.getEventMatch(leagueId, type)
-                .compose(SchedulerUtils.ioToMain<EventMatchResponse>())
-                .subscribe({ eventMatchResponse ->
+        mDataManager.getTeamList(leagueId)
+                .compose(SchedulerUtils.ioToMain<List<Team>>())
+                .subscribe({ teams ->
                     mvpView?.showProgress(false)
-                    if(eventMatchResponse.events == null) {
-                        mvpView?.showNoMatch()
-                    } else {
-                        mvpView?.showTeam(eventMatchResponse.events)
-                    }
+                    mvpView?.showTeam(teams)
                 }) { throwable ->
                     mvpView?.showProgress(false)
                     mvpView?.showError(throwable.message.toString())

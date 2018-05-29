@@ -53,7 +53,7 @@ class MatchPresenterTest {
         mMatchPresenter?.getEvent(leagueId, 0)
 
         verify<MatchMvpView>(mMockMatchMvpView, times(2)).showProgress(anyBoolean())
-        verify<MatchMvpView>(mMockMatchMvpView).showEventMatch(events)
+        verify<MatchMvpView>(mMockMatchMvpView).showTeam(events)
         verify<MatchMvpView>(mMockMatchMvpView, never()).showError("No Data")
 
     }
@@ -71,7 +71,7 @@ class MatchPresenterTest {
 
         verify<MatchMvpView>(mMockMatchMvpView, times(2)).showProgress(anyBoolean())
         verify<MatchMvpView>(mMockMatchMvpView).showError("No Data")
-        verify<MatchMvpView>(mMockMatchMvpView, never()).showEventMatch(eventList)
+        verify<MatchMvpView>(mMockMatchMvpView, never()).showTeam(eventList)
     }
 
 }

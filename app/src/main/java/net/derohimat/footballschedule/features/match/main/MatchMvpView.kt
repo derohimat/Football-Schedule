@@ -11,7 +11,7 @@ interface MatchMvpView : MvpView {
 
     fun showNoMatch()
 
-    fun showEventMatch(data: List<EventMatch>)
+    fun showTeam(data: List<EventMatch>)
 
     fun showEventMatchFav(data: List<EventMatchFav>)
 

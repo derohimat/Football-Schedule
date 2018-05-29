@@ -1,4 +1,4 @@
-package net.derohimat.footballschedule.features.match.main
+package net.derohimat.footballschedule.features.team
 
 import android.graphics.Color
 import android.os.Bundle
@@ -16,9 +16,8 @@ import com.aurelhubert.ahbottomnavigation.AHBottomNavigation
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem
 import net.derohimat.footballschedule.R
 import net.derohimat.footballschedule.data.db.database
-import net.derohimat.footballschedule.data.model.EventMatch
-import net.derohimat.footballschedule.data.model.EventMatchFav
 import net.derohimat.footballschedule.data.model.League
+import net.derohimat.footballschedule.data.model.Team
 import net.derohimat.footballschedule.features.base.BaseActivity
 import net.derohimat.footballschedule.features.common.ErrorView
 import net.derohimat.footballschedule.features.match.detail.DetailMatchMatchActivity
@@ -29,15 +28,12 @@ import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 
+class TeamActivity : BaseActivity(), TeamMvpView, TeamAdapter.ClickListener, ErrorView.ErrorListener, AdapterView.OnItemSelectedListener {
 
-class MatchActivity : BaseActivity(), MatchMvpView, EventAdapter.ClickListener, EventFavAdapter.ClickListener, ErrorView.ErrorListener, AdapterView.OnItemSelectedListener {
-
     @Inject
-    lateinit var mEventAdapter: EventAdapter
+    lateinit var mAdapter: TeamAdapter
     @Inject
-    lateinit var mEventFavAdapter: EventFavAdapter
-    @Inject
-    lateinit var mMatchPresenter: MatchPresenter
+    lateinit var mTeamPresenter: TeamPresenter
 
     @BindView(R.id.spinner_league)
     @JvmField
@@ -68,13 +64,13 @@ class MatchActivity : BaseActivity(), MatchMvpView, EventAdapter.ClickListener, 
     var mToolbar: Toolbar? = null
 
     private var leagueList: List<League> = ArrayList()
-    private var selectedLeague: String = "4328"
+    private var selectedLeague: String = "English Premier League"
     private var selectedType: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityComponent().inject(this)
-        mMatchPresenter.attachView(this)
+        mTeamPresenter.attachView(this)
 
         setSupportActionBar(mToolbar)
 
@@ -82,10 +78,9 @@ class MatchActivity : BaseActivity(), MatchMvpView, EventAdapter.ClickListener, 
         mSwipeRefreshLayout?.setColorSchemeResources(R.color.white)
         mSwipeRefreshLayout?.setOnRefreshListener { getEvent() }
 
-        mEventAdapter.setClickListener(this)
-        mEventFavAdapter.setClickListener(this)
+        mAdapter.setClickListener(this)
         mRecycler?.layoutManager = LinearLayoutManager(this)
-        mRecycler?.adapter = mEventAdapter
+        mRecycler?.adapter = mAdapter
 
         mErrorView?.setErrorListener(this)
 
@@ -93,17 +88,15 @@ class MatchActivity : BaseActivity(), MatchMvpView, EventAdapter.ClickListener, 
 
         setupBottomNavigation()
 
-        mMatchPresenter.getLeague()
+        mTeamPresenter.getLeague()
     }
 
     private fun setupBottomNavigation() {
         val item1 = AHBottomNavigationItem(R.string.tab_1, R.drawable.ic_skip_previous_white_24dp, R.color.primary)
-        val item2 = AHBottomNavigationItem(R.string.tab_2, R.drawable.ic_skip_next_white_24dp, R.color.primary)
-        val item3 = AHBottomNavigationItem(R.string.tab_3, R.drawable.ic_favorite_white_24dp, R.color.primary)
+        val item2 = AHBottomNavigationItem(R.string.tab_3, R.drawable.ic_favorite_white_24dp, R.color.primary)
 
         mBottomNavigation?.addItem(item1)
         mBottomNavigation?.addItem(item2)
-        mBottomNavigation?.addItem(item3)
 
         mBottomNavigation?.defaultBackgroundColor = Color.parseColor("#FEFEFE")
         mBottomNavigation?.isBehaviorTranslationEnabled = true
@@ -117,17 +110,12 @@ class MatchActivity : BaseActivity(), MatchMvpView, EventAdapter.ClickListener, 
                 0 -> {
                     mSpinner?.visibility = View.VISIBLE
                     selectedType = 0
-                    mMatchPresenter.getEvent(selectedLeague, selectedType)
-                }
-                1 -> {
-                    mSpinner?.visibility = View.VISIBLE
-                    selectedType = 1
-                    mMatchPresenter.getEvent(selectedLeague, selectedType)
+                    mTeamPresenter.getTeams(selectedLeague)
                 }
                 else -> {
                     mSpinner?.visibility = View.GONE
-                    selectedType = 2
-                    showEventMatchFav(getFavorite())
+                    selectedType = 1
+                    showTeam(getFavorite())
                 }
             }
             true
@@ -139,7 +127,7 @@ class MatchActivity : BaseActivity(), MatchMvpView, EventAdapter.ClickListener, 
 
     override fun onDestroy() {
         super.onDestroy()
-        mMatchPresenter.detachView()
+        mTeamPresenter.detachView()
     }
 
     override fun setupAdapter(data: List<League>) {
@@ -151,22 +139,10 @@ class MatchActivity : BaseActivity(), MatchMvpView, EventAdapter.ClickListener, 
         mSpinner?.adapter = dataAdapter
     }
 
-    override fun showTeam(data: List<EventMatch>) {
-        mEventFavAdapter.clearData()
-        mRecycler?.adapter = mEventAdapter
-        mEventAdapter.setData(data, selectedType)
-        mEventAdapter.notifyDataSetChanged()
-
-        mErrorView?.visibility = View.GONE
-        mRecycler?.visibility = View.VISIBLE
-        mSwipeRefreshLayout?.visibility = View.VISIBLE
-    }
-
-    override fun showEventMatchFav(data: List<EventMatchFav>) {
-        mEventAdapter.clearData()
-        mRecycler?.adapter = mEventFavAdapter
-        mEventFavAdapter.setData(data, selectedType)
-        mEventAdapter.notifyDataSetChanged()
+    override fun showTeam(data: List<Team>) {
+        mRecycler?.adapter = mAdapter
+        mAdapter.setData(data)
+        mAdapter.notifyDataSetChanged()
 
         mErrorView?.visibility = View.GONE
         mRecycler?.visibility = View.VISIBLE
@@ -175,7 +151,7 @@ class MatchActivity : BaseActivity(), MatchMvpView, EventAdapter.ClickListener, 
 
     override fun showProgress(show: Boolean) {
         if (show) {
-            if (mRecycler?.visibility == View.VISIBLE && mEventAdapter.itemCount > 0) {
+            if (mRecycler?.visibility == View.VISIBLE && mAdapter.itemCount > 0) {
                 mSwipeRefreshLayout?.isRefreshing = true
             } else {
                 mProgress?.visibility = View.VISIBLE
@@ -207,10 +183,9 @@ class MatchActivity : BaseActivity(), MatchMvpView, EventAdapter.ClickListener, 
 
     private fun getEvent() {
         when (selectedType) {
-            0 -> mMatchPresenter.getEvent(selectedLeague, selectedType)
-            1 -> mMatchPresenter.getEvent(selectedLeague, selectedType)
+            0 -> mTeamPresenter.getTeams(selectedLeague)
             else -> {
-                showEventMatchFav(getFavorite())
+                showTeam(getFavorite())
             }
         }
     }
@@ -218,27 +193,26 @@ class MatchActivity : BaseActivity(), MatchMvpView, EventAdapter.ClickListener, 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         when {
             leagueList.isNotEmpty() -> {
-                selectedLeague = leagueList[position].leagueId
+                selectedLeague = leagueList[position].leagueName
                 getEvent()
             }
         }
     }
 
-    private fun getFavorite(): List<EventMatchFav> {
+    private fun getFavorite(): List<Team> {
         return database.use {
-            select("favorite").exec {
+            select("favorite_team").exec {
                 parseList(classParser())
             }
         }
     }
 
-    override fun showNoMatch() {
-        mEventAdapter.clearData()
-        mEventFavAdapter.clearData()
+    override fun showNoTeam() {
+        mAdapter.clearData()
         mErrorView?.visibility = View.VISIBLE
     }
 
     override fun onReloadData() {
-        mMatchPresenter.getEvent(selectedLeague, selectedType)
+        mTeamPresenter.getTeams(selectedLeague)
     }
 }
