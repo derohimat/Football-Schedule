@@ -14,6 +14,7 @@ import net.derohimat.footballschedule.R
 import net.derohimat.footballschedule.data.model.Player
 import net.derohimat.footballschedule.features.base.BaseActivity
 import net.derohimat.footballschedule.features.common.ErrorView
+import net.derohimat.footballschedule.features.player.detail.DetailPlayerActivity
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -123,8 +124,8 @@ class PlayerActivity : BaseActivity(), PlayerMvpView, PlayerAdapter.ClickListene
         Timber.e(message)
     }
 
-    override fun onPlayerClick(teamId: String, teamName: String) {
-//        startActivity(DetailTeamActivity.getStartIntent(this, teamId, mTeamName))
+    override fun onPlayerClick(player: Player) {
+        startActivity(DetailPlayerActivity.getStartIntent(this, player))
     }
 
     override fun showNoPlayer() {

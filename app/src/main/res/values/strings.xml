@@ -27,5 +27,8 @@
     <string name="manager">Manager :</string>
     <string name="players">Players</string>
     <string name="stadium">Stadium :</string>
+    <string name="join_date">Join Date </string>
+    <string name="nationality">Nationality</string>
+    <string name="birt_place_date">Birt Place / Date</string>
 
 </resources>

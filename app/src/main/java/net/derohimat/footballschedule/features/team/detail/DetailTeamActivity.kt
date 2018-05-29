@@ -99,7 +99,7 @@ class DetailTeamActivity : BaseActivity(), DetailTeamMvpView, ErrorView.ErrorLis
 
     companion object {
 
-        const val EXTRA_ID = "EXTRA_ID"
+        const val EXTRA_ID = "EXTRA_DATA"
         const val EXTRA_NAME = "EXTRA_NAME"
 
         fun getStartIntent(context: Context, teamId: String, teamName: String): Intent {

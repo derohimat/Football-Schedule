@@ -80,6 +80,9 @@ android {
             coroutines "enable"
         }
     }
+    androidExtensions {
+        experimental = true
+    }
 }
 
 configurations.all {

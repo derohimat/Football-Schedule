@@ -56,7 +56,7 @@ constructor() : RecyclerView.Adapter<PlayerAdapter.EventViewHolder>() {
     }
 
     interface ClickListener {
-        fun onPlayerClick(teamId: String, teamName: String)
+        fun onPlayerClick(player: Player)
     }
 
     inner class EventViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -77,7 +77,7 @@ constructor() : RecyclerView.Adapter<PlayerAdapter.EventViewHolder>() {
 
         init {
             ButterKnife.bind(this, itemView)
-            itemView.setOnClickListener { mClickListener.onPlayerClick(item.idPlayer, item.player) }
+            itemView.setOnClickListener { mClickListener.onPlayerClick(item) }
         }
     }
 }

@@ -1,7 +1,10 @@
 package net.derohimat.footballschedule.data.model
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class Player(
 
         @SerializedName("strPlayer")
@@ -78,4 +81,4 @@ data class Player(
 
         @SerializedName("dateSigned")
         val dateSigned: String = ""
-)
+) : Parcelable
