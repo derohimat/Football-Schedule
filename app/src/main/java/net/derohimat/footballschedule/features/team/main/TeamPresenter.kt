@@ -40,4 +40,18 @@ constructor(private val mDataManager: DataManager) : BasePresenter<TeamMvpView>(
                 }
     }
 
+    fun searchTeams(query: String) {
+        checkViewAttached()
+        mvpView?.showProgress(true)
+        mDataManager.searchTeam(query)
+                .compose(SchedulerUtils.ioToMain<List<Team>>())
+                .subscribe({ teams ->
+                    mvpView?.showProgress(false)
+                    mvpView?.showTeam(teams)
+                }) { throwable ->
+                    mvpView?.showProgress(false)
+                    mvpView?.showError(throwable.message.toString())
+                }
+    }
+
 }

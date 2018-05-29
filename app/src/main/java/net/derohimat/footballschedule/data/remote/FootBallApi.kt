@@ -31,4 +31,7 @@ interface FootBallApi {
     @GET("searchevents.php")
     fun searchEvent(@Query("e") query: String): Single<SearchEventMatchResponse>
 
+    @GET("searchteams.php")
+    fun searchTeam(@Query("t") query: String): Single<TeamResponse>
+
 }
