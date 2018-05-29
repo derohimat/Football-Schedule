@@ -2,10 +2,13 @@ package net.derohimat.footballschedule.features.match.detail.widget
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.database.sqlite.SQLiteConstraintException
+import android.provider.CalendarContract
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -22,6 +25,7 @@ import org.jetbrains.anko.db.insert
 import org.jetbrains.anko.db.select
 import org.jetbrains.anko.sdk25.coroutines.onClick
 import timber.log.Timber
+import java.text.SimpleDateFormat
 
 class MatchDetailView : LinearLayout {
 
@@ -34,6 +38,9 @@ class MatchDetailView : LinearLayout {
     @BindView(R.id.txt_favorite)
     @JvmField
     var txtFavorite: TextView? = null
+    @BindView(R.id.txt_add_to_calendar)
+    @JvmField
+    var txtAddToCalendar: TextView? = null
     @BindView(R.id.img_home)
     @JvmField
     var imgHome: ImageView? = null
@@ -117,11 +124,24 @@ class MatchDetailView : LinearLayout {
         ButterKnife.bind(this)
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n", "SimpleDateFormat")
     fun setEvent(eventMatch: EventMatch, dbHelper: DatabaseHelper) {
         this.database = dbHelper
         txtName?.text = eventMatch.league?.substring(0, 1)?.toUpperCase() + eventMatch.league?.substring(1)
         txtDate?.text = eventMatch.dateEvent
+
+        val currentDate = System.currentTimeMillis()
+        val fmt = SimpleDateFormat("yyyy-MM-dd")
+        val differentDate = eventMatch.dateEvent?.compareTo(fmt.format(currentDate))
+
+        when {
+            differentDate != null && differentDate > 0 -> {
+                txtAddToCalendar?.visibility = View.VISIBLE
+            }
+            else -> {
+                txtAddToCalendar?.visibility = View.GONE
+            }
+        }
 
         isFavorite = isFavoriteEvent(dbHelper, eventMatch.idEvent)
 
@@ -140,6 +160,15 @@ class MatchDetailView : LinearLayout {
                     checkFavorite()
                 }
             }
+        }
+
+        txtAddToCalendar?.setOnClickListener {
+            val intent = Intent(Intent.ACTION_EDIT)
+            intent.type = "vnd.android.cursor.item/event"
+            intent.putExtra(CalendarContract.Events.TITLE, eventMatch.event)
+            intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, eventMatch.dateEvent)
+            intent.putExtra(CalendarContract.Events.ALL_DAY, false)
+            context.startActivity(intent)
         }
 
         txtHome?.text = eventMatch.homeTeam

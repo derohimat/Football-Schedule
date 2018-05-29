@@ -29,7 +29,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:background="?android:selectableItemBackground"
         android:text="@string/add_to_favorite"
+        android:textColor="@color/accent"
+        android:textSize="@dimen/text_body"/>
+
+    <TextView
+        android:id="@+id/txt_add_to_calendar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="?android:selectableItemBackground"
+        android:text="@string/add_to_calendar"
         android:textColor="@color/accent"
         android:textSize="@dimen/text_body"/>
 

@@ -23,5 +23,6 @@
     <string name="team_tab_1">Teams</string>
     <string name="list_team">Teams</string>
     <string name="match">Match</string>
+    <string name="add_to_calendar">Add to Calendar</string>
 
 </resources>
