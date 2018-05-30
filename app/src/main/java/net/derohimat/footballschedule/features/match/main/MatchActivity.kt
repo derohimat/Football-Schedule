@@ -48,36 +48,28 @@ class MatchActivity : BaseActivity(), MatchMvpView, EventAdapter.ClickListener, 
     lateinit var mMatchPresenter: MatchPresenter
 
     @BindView(R.id.spinner_league)
-    @JvmField
-    var mSpinner: AppCompatSpinner? = null
+    lateinit var mSpinner: AppCompatSpinner
 
     @BindView(R.id.view_error)
-    @JvmField
-    var mErrorView: ErrorView? = null
+    lateinit var mErrorView: ErrorView
 
     @BindView(R.id.progress)
-    @JvmField
-    var mProgress: ProgressBar? = null
+    lateinit var mProgress: ProgressBar
 
     @BindView(R.id.recycler_view)
-    @JvmField
-    var mRecycler: RecyclerView? = null
+    lateinit var mRecycler: RecyclerView
 
     @BindView(R.id.swipe_to_refresh)
-    @JvmField
-    var mSwipeRefreshLayout: SwipeRefreshLayout? = null
+    lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
 
     @BindView(R.id.bottom_navigation)
-    @JvmField
-    var mBottomNavigation: AHBottomNavigation? = null
+    lateinit var mBottomNavigation: AHBottomNavigation
 
     @BindView(R.id.search_view)
-    @JvmField
-    var mSearchView: MaterialSearchView? = null
+    lateinit var mSearchView: MaterialSearchView
 
     @BindView(R.id.toolbar)
-    @JvmField
-    var mToolbar: Toolbar? = null
+    lateinit var mToolbar: Toolbar
 
     private var leagueList: List<League> = ArrayList()
     private var selectedLeague: String = "4328"
@@ -88,21 +80,21 @@ class MatchActivity : BaseActivity(), MatchMvpView, EventAdapter.ClickListener, 
         activityComponent().inject(this)
         mMatchPresenter.attachView(this)
 
-        mToolbar?.title = "Matches"
+        mToolbar.title = "Matches"
         setSupportActionBar(mToolbar)
 
-        mSwipeRefreshLayout?.setProgressBackgroundColorSchemeResource(R.color.primary)
-        mSwipeRefreshLayout?.setColorSchemeResources(R.color.white)
-        mSwipeRefreshLayout?.setOnRefreshListener { getEvent() }
+        mSwipeRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.primary)
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.white)
+        mSwipeRefreshLayout.setOnRefreshListener { getEvent() }
 
         mEventAdapter.setClickListener(this)
         mEventFavAdapter.setClickListener(this)
-        mRecycler?.layoutManager = LinearLayoutManager(this)
-        mRecycler?.adapter = mEventAdapter
+        mRecycler.layoutManager = LinearLayoutManager(this)
+        mRecycler.adapter = mEventAdapter
 
-        mErrorView?.setErrorListener(this)
+        mErrorView.setErrorListener(this)
 
-        mSpinner?.onItemSelectedListener = this
+        mSpinner.onItemSelectedListener = this
 
         setupBottomNavigation()
         setupSearchView()
@@ -111,7 +103,7 @@ class MatchActivity : BaseActivity(), MatchMvpView, EventAdapter.ClickListener, 
     }
 
     private fun setupSearchView() {
-        mSearchView?.setOnQueryTextListener(object : MaterialSearchView.OnQueryTextListener {
+        mSearchView.setOnQueryTextListener(object : MaterialSearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 //Do some magic
                 mMatchPresenter.searchEvent(query)
@@ -124,7 +116,7 @@ class MatchActivity : BaseActivity(), MatchMvpView, EventAdapter.ClickListener, 
             }
         })
 
-        mSearchView?.setOnSearchViewListener(object : MaterialSearchView.SearchViewListener {
+        mSearchView.setOnSearchViewListener(object : MaterialSearchView.SearchViewListener {
             override fun onSearchViewShown() {
                 //Do some magic
             }
@@ -140,31 +132,31 @@ class MatchActivity : BaseActivity(), MatchMvpView, EventAdapter.ClickListener, 
         val item2 = AHBottomNavigationItem(R.string.tab_2, R.drawable.ic_skip_next_white_24dp, R.color.primary)
         val item3 = AHBottomNavigationItem(R.string.tab_3, R.drawable.ic_favorite_white_24dp, R.color.primary)
 
-        mBottomNavigation?.addItem(item1)
-        mBottomNavigation?.addItem(item2)
-        mBottomNavigation?.addItem(item3)
+        mBottomNavigation.addItem(item1)
+        mBottomNavigation.addItem(item2)
+        mBottomNavigation.addItem(item3)
 
-        mBottomNavigation?.defaultBackgroundColor = Color.parseColor("#FEFEFE")
-        mBottomNavigation?.isBehaviorTranslationEnabled = true
-        mBottomNavigation?.accentColor = Color.parseColor("#F63D2B")
-        mBottomNavigation?.inactiveColor = Color.parseColor("#747474")
-        mBottomNavigation?.titleState = AHBottomNavigation.TitleState.ALWAYS_SHOW
-        mBottomNavigation?.isColored = true
+        mBottomNavigation.defaultBackgroundColor = Color.parseColor("#FEFEFE")
+        mBottomNavigation.isBehaviorTranslationEnabled = true
+        mBottomNavigation.accentColor = Color.parseColor("#F63D2B")
+        mBottomNavigation.inactiveColor = Color.parseColor("#747474")
+        mBottomNavigation.titleState = AHBottomNavigation.TitleState.ALWAYS_SHOW
+        mBottomNavigation.isColored = true
 
-        mBottomNavigation?.setOnTabSelectedListener({ position, _ ->
+        mBottomNavigation.setOnTabSelectedListener({ position, _ ->
             when (position) {
                 0 -> {
-                    mSpinner?.visibility = View.VISIBLE
+                    mSpinner.visibility = View.VISIBLE
                     selectedType = 0
                     mMatchPresenter.getEvent(selectedLeague, selectedType)
                 }
                 1 -> {
-                    mSpinner?.visibility = View.VISIBLE
+                    mSpinner.visibility = View.VISIBLE
                     selectedType = 1
                     mMatchPresenter.getEvent(selectedLeague, selectedType)
                 }
                 else -> {
-                    mSpinner?.visibility = View.GONE
+                    mSpinner.visibility = View.GONE
                     selectedType = 2
                     showEventMatchFav(getFavorite())
                 }
@@ -187,53 +179,53 @@ class MatchActivity : BaseActivity(), MatchMvpView, EventAdapter.ClickListener, 
         val dataAdapter = ArrayAdapter<String>(this,
                 R.layout.item_league, leagueList.map { league -> league.leagueName })
 
-        mSpinner?.adapter = dataAdapter
+        mSpinner.adapter = dataAdapter
     }
 
     override fun showTeam(data: List<EventMatch>) {
         mEventFavAdapter.clearData()
-        mRecycler?.adapter = mEventAdapter
+        mRecycler.adapter = mEventAdapter
         mEventAdapter.setData(data, selectedType)
         mEventAdapter.notifyDataSetChanged()
 
-        mErrorView?.visibility = View.GONE
-        mRecycler?.visibility = View.VISIBLE
-        mSwipeRefreshLayout?.visibility = View.VISIBLE
+        mErrorView.visibility = View.GONE
+        mRecycler.visibility = View.VISIBLE
+        mSwipeRefreshLayout.visibility = View.VISIBLE
     }
 
     override fun showEventMatchFav(data: List<EventMatchFav>) {
         mEventAdapter.clearData()
-        mRecycler?.adapter = mEventFavAdapter
+        mRecycler.adapter = mEventFavAdapter
         mEventFavAdapter.setData(data, selectedType)
         mEventAdapter.notifyDataSetChanged()
 
-        mErrorView?.visibility = View.GONE
-        mRecycler?.visibility = View.VISIBLE
-        mSwipeRefreshLayout?.visibility = View.VISIBLE
+        mErrorView.visibility = View.GONE
+        mRecycler.visibility = View.VISIBLE
+        mSwipeRefreshLayout.visibility = View.VISIBLE
     }
 
     override fun showProgress(show: Boolean) {
         if (show) {
-            if (mRecycler?.visibility == View.VISIBLE && mEventAdapter.itemCount > 0) {
-                mSwipeRefreshLayout?.isRefreshing = true
+            if (mRecycler.visibility == View.VISIBLE && mEventAdapter.itemCount > 0) {
+                mSwipeRefreshLayout.isRefreshing = true
             } else {
-                mProgress?.visibility = View.VISIBLE
+                mProgress.visibility = View.VISIBLE
 
-                mRecycler?.visibility = View.GONE
-                mSwipeRefreshLayout?.visibility = View.GONE
+                mRecycler.visibility = View.GONE
+                mSwipeRefreshLayout.visibility = View.GONE
             }
 
-            mErrorView?.visibility = View.GONE
+            mErrorView.visibility = View.GONE
         } else {
-            mSwipeRefreshLayout?.isRefreshing = false
-            mProgress?.visibility = View.GONE
+            mSwipeRefreshLayout.isRefreshing = false
+            mProgress.visibility = View.GONE
         }
     }
 
     override fun showError(message: String) {
-        mRecycler?.visibility = View.GONE
-        mSwipeRefreshLayout?.visibility = View.GONE
-        mErrorView?.visibility = View.VISIBLE
+        mRecycler.visibility = View.GONE
+        mSwipeRefreshLayout.visibility = View.GONE
+        mErrorView.visibility = View.VISIBLE
         Timber.e(message)
     }
 
@@ -264,6 +256,7 @@ class MatchActivity : BaseActivity(), MatchMvpView, EventAdapter.ClickListener, 
     }
 
     private fun getFavorite(): List<EventMatchFav> {
+        mSwipeRefreshLayout.isRefreshing = false
         return database.use {
             select("favorite_match").exec {
                 parseList(classParser())
@@ -274,7 +267,7 @@ class MatchActivity : BaseActivity(), MatchMvpView, EventAdapter.ClickListener, 
     override fun showNoMatch() {
         mEventAdapter.clearData()
         mEventFavAdapter.clearData()
-        mErrorView?.visibility = View.VISIBLE
+        mErrorView.visibility = View.VISIBLE
     }
 
     override fun onReloadData() {
@@ -287,7 +280,7 @@ class MatchActivity : BaseActivity(), MatchMvpView, EventAdapter.ClickListener, 
             if (matches != null && matches.size > 0) {
                 val searchWrd = matches[0]
                 if (!TextUtils.isEmpty(searchWrd)) {
-                    mSearchView?.setQuery(searchWrd, false)
+                    mSearchView.setQuery(searchWrd, false)
                 }
             }
             return
@@ -296,8 +289,8 @@ class MatchActivity : BaseActivity(), MatchMvpView, EventAdapter.ClickListener, 
     }
 
     override fun onBackPressed() {
-        if (mSearchView != null  && mSearchView!!.isSearchOpen) {
-            mSearchView?.closeSearch()
+        if (mSearchView.isSearchOpen) {
+            mSearchView.closeSearch()
         } else {
             super.onBackPressed()
         }
@@ -308,7 +301,7 @@ class MatchActivity : BaseActivity(), MatchMvpView, EventAdapter.ClickListener, 
         inflater.inflate(R.menu.match_menu, menu)
 
         val item = menu.findItem(R.id.action_search)
-        mSearchView?.setMenuItem(item)
+        mSearchView.setMenuItem(item)
         return true
     }
 

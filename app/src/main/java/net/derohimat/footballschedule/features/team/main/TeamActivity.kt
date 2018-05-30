@@ -45,36 +45,28 @@ class TeamActivity : BaseActivity(), TeamMvpView, TeamAdapter.ClickListener, Err
     lateinit var mTeamPresenter: TeamPresenter
 
     @BindView(R.id.spinner_league)
-    @JvmField
-    var mSpinner: AppCompatSpinner? = null
+    lateinit var mSpinner: AppCompatSpinner
 
     @BindView(R.id.view_error)
-    @JvmField
-    var mErrorView: ErrorView? = null
+    lateinit var mErrorView: ErrorView
 
     @BindView(R.id.progress)
-    @JvmField
-    var mProgress: ProgressBar? = null
+    lateinit var mProgress: ProgressBar
 
     @BindView(R.id.recycler_view)
-    @JvmField
-    var mRecycler: RecyclerView? = null
+    lateinit var mRecycler: RecyclerView
 
     @BindView(R.id.swipe_to_refresh)
-    @JvmField
-    var mSwipeRefreshLayout: SwipeRefreshLayout? = null
+    lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
 
     @BindView(R.id.bottom_navigation)
-    @JvmField
-    var mBottomNavigation: AHBottomNavigation? = null
+    lateinit var mBottomNavigation: AHBottomNavigation
 
     @BindView(R.id.search_view)
-    @JvmField
-    var mSearchView: MaterialSearchView? = null
+    lateinit var mSearchView: MaterialSearchView
 
     @BindView(R.id.toolbar)
-    @JvmField
-    var mToolbar: Toolbar? = null
+    lateinit var mToolbar: Toolbar
 
     private var leagueList: List<League> = ArrayList()
     private var selectedLeague: String = "English Premier League"
@@ -85,22 +77,22 @@ class TeamActivity : BaseActivity(), TeamMvpView, TeamAdapter.ClickListener, Err
         activityComponent().inject(this)
         mTeamPresenter.attachView(this)
 
-        mToolbar?.title = "Teams"
+        mToolbar.title = "Teams"
         setSupportActionBar(mToolbar)
         val actionBar = supportActionBar
         actionBar?.setDisplayHomeAsUpEnabled(true)
 
-        mSwipeRefreshLayout?.setProgressBackgroundColorSchemeResource(R.color.primary)
-        mSwipeRefreshLayout?.setColorSchemeResources(R.color.white)
-        mSwipeRefreshLayout?.setOnRefreshListener { getEvent() }
+        mSwipeRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.primary)
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.white)
+        mSwipeRefreshLayout.setOnRefreshListener { getEvent() }
 
         mAdapter.setClickListener(this)
-        mRecycler?.layoutManager = LinearLayoutManager(this)
-        mRecycler?.adapter = mAdapter
+        mRecycler.layoutManager = LinearLayoutManager(this)
+        mRecycler.adapter = mAdapter
 
-        mErrorView?.setErrorListener(this)
+        mErrorView.setErrorListener(this)
 
-        mSpinner?.onItemSelectedListener = this
+        mSpinner.onItemSelectedListener = this
 
         setupSearchView()
         setupBottomNavigation()
@@ -109,7 +101,7 @@ class TeamActivity : BaseActivity(), TeamMvpView, TeamAdapter.ClickListener, Err
     }
 
     private fun setupSearchView() {
-        mSearchView?.setOnQueryTextListener(object : MaterialSearchView.OnQueryTextListener {
+        mSearchView.setOnQueryTextListener(object : MaterialSearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 //Do some magic
                 mTeamPresenter.searchTeams(query)
@@ -122,7 +114,7 @@ class TeamActivity : BaseActivity(), TeamMvpView, TeamAdapter.ClickListener, Err
             }
         })
 
-        mSearchView?.setOnSearchViewListener(object : MaterialSearchView.SearchViewListener {
+        mSearchView.setOnSearchViewListener(object : MaterialSearchView.SearchViewListener {
             override fun onSearchViewShown() {
                 //Do some magic
             }
@@ -137,25 +129,25 @@ class TeamActivity : BaseActivity(), TeamMvpView, TeamAdapter.ClickListener, Err
         val item1 = AHBottomNavigationItem(R.string.team_tab_1, R.drawable.ic_team_24dp, R.color.primary)
         val item2 = AHBottomNavigationItem(R.string.tab_3, R.drawable.ic_favorite_white_24dp, R.color.primary)
 
-        mBottomNavigation?.addItem(item1)
-        mBottomNavigation?.addItem(item2)
+        mBottomNavigation.addItem(item1)
+        mBottomNavigation.addItem(item2)
 
-        mBottomNavigation?.defaultBackgroundColor = Color.parseColor("#FEFEFE")
-        mBottomNavigation?.isBehaviorTranslationEnabled = true
-        mBottomNavigation?.accentColor = Color.parseColor("#F63D2B")
-        mBottomNavigation?.inactiveColor = Color.parseColor("#747474")
-        mBottomNavigation?.titleState = AHBottomNavigation.TitleState.ALWAYS_SHOW
-        mBottomNavigation?.isColored = true
+        mBottomNavigation.defaultBackgroundColor = Color.parseColor("#FEFEFE")
+        mBottomNavigation.isBehaviorTranslationEnabled = true
+        mBottomNavigation.accentColor = Color.parseColor("#F63D2B")
+        mBottomNavigation.inactiveColor = Color.parseColor("#747474")
+        mBottomNavigation.titleState = AHBottomNavigation.TitleState.ALWAYS_SHOW
+        mBottomNavigation.isColored = true
 
-        mBottomNavigation?.setOnTabSelectedListener({ position, _ ->
+        mBottomNavigation.setOnTabSelectedListener({ position, _ ->
             when (position) {
                 0 -> {
-                    mSpinner?.visibility = View.VISIBLE
+                    mSpinner.visibility = View.VISIBLE
                     selectedType = 0
                     mTeamPresenter.getTeams(selectedLeague)
                 }
                 else -> {
-                    mSpinner?.visibility = View.GONE
+                    mSpinner.visibility = View.GONE
                     selectedType = 1
                     showTeam(getFavorite())
                 }
@@ -178,41 +170,41 @@ class TeamActivity : BaseActivity(), TeamMvpView, TeamAdapter.ClickListener, Err
         val dataAdapter = ArrayAdapter<String>(this,
                 R.layout.item_league, leagueList.map { league -> league.leagueName })
 
-        mSpinner?.adapter = dataAdapter
+        mSpinner.adapter = dataAdapter
     }
 
     override fun showTeam(data: List<Team>) {
-        mRecycler?.adapter = mAdapter
+        mRecycler.adapter = mAdapter
         mAdapter.setData(data)
         mAdapter.notifyDataSetChanged()
 
-        mErrorView?.visibility = View.GONE
-        mRecycler?.visibility = View.VISIBLE
-        mSwipeRefreshLayout?.visibility = View.VISIBLE
+        mErrorView.visibility = View.GONE
+        mRecycler.visibility = View.VISIBLE
+        mSwipeRefreshLayout.visibility = View.VISIBLE
     }
 
     override fun showProgress(show: Boolean) {
         if (show) {
-            if (mRecycler?.visibility == View.VISIBLE && mAdapter.itemCount > 0) {
-                mSwipeRefreshLayout?.isRefreshing = true
+            if (mRecycler.visibility == View.VISIBLE && mAdapter.itemCount > 0) {
+                mSwipeRefreshLayout.isRefreshing = true
             } else {
-                mProgress?.visibility = View.VISIBLE
+                mProgress.visibility = View.VISIBLE
 
-                mRecycler?.visibility = View.GONE
-                mSwipeRefreshLayout?.visibility = View.GONE
+                mRecycler.visibility = View.GONE
+                mSwipeRefreshLayout.visibility = View.GONE
             }
 
-            mErrorView?.visibility = View.GONE
+            mErrorView.visibility = View.GONE
         } else {
-            mSwipeRefreshLayout?.isRefreshing = false
-            mProgress?.visibility = View.GONE
+            mSwipeRefreshLayout.isRefreshing = false
+            mProgress.visibility = View.GONE
         }
     }
 
     override fun showError(message: String) {
-        mRecycler?.visibility = View.GONE
-        mSwipeRefreshLayout?.visibility = View.GONE
-        mErrorView?.visibility = View.VISIBLE
+        mRecycler.visibility = View.GONE
+        mSwipeRefreshLayout.visibility = View.GONE
+        mErrorView.visibility = View.VISIBLE
         Timber.e(message)
     }
 
@@ -242,6 +234,7 @@ class TeamActivity : BaseActivity(), TeamMvpView, TeamAdapter.ClickListener, Err
     }
 
     private fun getFavorite(): List<Team> {
+        mSwipeRefreshLayout.isRefreshing = false
         return database.use {
             select("favorite_team").exec {
                 parseList(classParser())
@@ -251,7 +244,7 @@ class TeamActivity : BaseActivity(), TeamMvpView, TeamAdapter.ClickListener, Err
 
     override fun showNoTeam() {
         mAdapter.clearData()
-        mErrorView?.visibility = View.VISIBLE
+        mErrorView.visibility = View.VISIBLE
     }
 
     override fun onReloadData() {
@@ -264,7 +257,7 @@ class TeamActivity : BaseActivity(), TeamMvpView, TeamAdapter.ClickListener, Err
             if (matches != null && matches.size > 0) {
                 val searchWrd = matches[0]
                 if (!TextUtils.isEmpty(searchWrd)) {
-                    mSearchView?.setQuery(searchWrd, false)
+                    mSearchView.setQuery(searchWrd, false)
                 }
             }
             return
@@ -273,8 +266,8 @@ class TeamActivity : BaseActivity(), TeamMvpView, TeamAdapter.ClickListener, Err
     }
 
     override fun onBackPressed() {
-        if (mSearchView != null && mSearchView!!.isSearchOpen) {
-            mSearchView?.closeSearch()
+        if (mSearchView.isSearchOpen) {
+            mSearchView.closeSearch()
         } else {
             super.onBackPressed()
         }
@@ -285,7 +278,7 @@ class TeamActivity : BaseActivity(), TeamMvpView, TeamAdapter.ClickListener, Err
         inflater.inflate(R.menu.team_menu, menu)
 
         val item = menu.findItem(R.id.action_search)
-        mSearchView?.setMenuItem(item)
+        mSearchView.setMenuItem(item)
         return true
     }
 

@@ -17,7 +17,7 @@ class DatabaseHelper(ctx: Context) :
             if (instance == null) {
                 instance = DatabaseHelper(context.applicationContext)
             }
-            return instance!!
+            return instance as DatabaseHelper
         }
     }
 
@@ -28,9 +28,9 @@ class DatabaseHelper(ctx: Context) :
                 "event" to TEXT + NOT_NULL,
                 "dateEvent" to TEXT + NOT_NULL,
                 "homeTeam" to TEXT + NOT_NULL,
-                "homeScore" to TEXT + NOT_NULL,
+                "homeScore" to TEXT,
                 "awayTeam" to TEXT + NOT_NULL,
-                "awayScore" to TEXT + NOT_NULL
+                "awayScore" to TEXT
         )
         db?.createTable(TABLE_TEAM, true,
                 "id" to INTEGER + PRIMARY_KEY + AUTOINCREMENT,
