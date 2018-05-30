@@ -2,9 +2,7 @@ package net.derohimat.footballschedule.data
 
 import io.reactivex.Observable
 import io.reactivex.Single
-import net.derohimat.footballschedule.data.model.League
-import net.derohimat.footballschedule.data.model.Team
-import net.derohimat.footballschedule.data.model.TeamResponse
+import net.derohimat.footballschedule.data.model.*
 import net.derohimat.footballschedule.data.remote.FootBallApi
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -13,13 +11,13 @@ import javax.inject.Singleton
 class DataManager @Inject
 constructor(private val mFootBallApi: FootBallApi) {
 
-    fun getLeagueList(): Single<List<String>> {
+    fun getLeagueList(): Observable<List<League>> {
         return mFootBallApi.getLeagueList()
                 .toObservable()
                 .flatMapIterable { leagueResponse -> leagueResponse.leagues }
-                .filter { league: League -> league.leagueStr.equals("Soccer") }
-                .map { league -> league.leagueName }
+                .filter { league: League -> league.leagueStr == "Soccer" }
                 .toList()
+                .toObservable()
     }
 
     fun getTeamList(league: String): Single<List<Team>> {
@@ -29,10 +27,41 @@ constructor(private val mFootBallApi: FootBallApi) {
                 .toList()
     }
 
-    fun getTeamDetail(teamId: String): Observable<Team> {
+    fun searchTeam(query: String): Single<List<Team>> {
+        return mFootBallApi.searchTeam(query)
+                .toObservable()
+                .flatMapIterable { teamResponse -> teamResponse.teams }
+                .toList()
+    }
+
+    fun getPlayerList(teamName: String): Single<List<Player>> {
+        return mFootBallApi.getPlayers(teamName)
+                .toObservable()
+                .flatMapIterable { playerResponse -> playerResponse.player }
+                .toList()
+    }
+
+    fun getEventMatch(leagueId: String, type: Int): Single<EventMatchResponse> {
+        return when (type) {
+            0 -> mFootBallApi.getPrevMatch(leagueId)
+            else -> {
+                mFootBallApi.getNextMatch(leagueId)
+            }
+        }
+    }
+
+    fun searchEvent(query: String): Single<SearchEventMatchResponse> {
+        return mFootBallApi.searchEvent(query)
+    }
+
+    fun getEventDetail(eventId: String): Single<EventMatchResponse> {
+        return mFootBallApi.getEventDetail(eventId)
+    }
+
+    fun getTeamDetail(teamId: String): Observable<TeamDetail> {
         return mFootBallApi.getTeamDetail(teamId)
                 .toObservable()
-                .map { t: TeamResponse -> t.teams.first() }
+                .map { t: TeamDetailResponse -> t.teams.first() }
     }
 
 }

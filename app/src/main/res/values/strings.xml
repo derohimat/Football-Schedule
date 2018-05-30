@@ -6,7 +6,29 @@
 
     <!-- Error View -->
     <string name="error_title">Oops</string>
-    <string name="error_message">There was a problem loading the team, please try again!</string>
+    <string name="error_message">There was a problem loading data, please try again!</string>
     <string name="error_reload">Reload</string>
-    <string name="title_activity_maps_sample">Map</string>
+
+    <!-- Main Tab -->
+    <string name="tab_1">Prev</string>
+    <string name="tab_2">Next</string>
+    <string name="tab_3">Favorite</string>
+    <string name="vs">VS</string>
+    <string name="date">Date</string>
+    <string name="event_name">Event Name</string>
+    <string name="add_to_favorite">Add to Favorite</string>
+    <string name="remove_from_favorite">Remove From Favorite</string>
+    <string name="test">Test</string>
+
+    <string name="team_tab_1">Teams</string>
+    <string name="list_team">Teams</string>
+    <string name="match">Match</string>
+    <string name="add_to_calendar">Add to Calendar</string>
+    <string name="manager">Manager :</string>
+    <string name="players">Players</string>
+    <string name="stadium">Stadium :</string>
+    <string name="join_date">Join Date </string>
+    <string name="nationality">Nationality</string>
+    <string name="birt_place_date">Birt Place / Date</string>
+
 </resources>

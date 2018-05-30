@@ -13,7 +13,6 @@ import net.derohimat.footballschedule.injection.component.DaggerConfigPersistent
 import net.derohimat.footballschedule.injection.component.FragmentComponent
 import net.derohimat.footballschedule.injection.module.FragmentModule
 import timber.log.Timber
-import java.util.concurrent.atomic.AtomicLong
 
 /**
  * Abstract Fragment that every other Fragment in this application must implement. It handles
@@ -75,6 +74,5 @@ abstract class BaseFragment : Fragment() {
 
         private val KEY_FRAGMENT_ID = "KEY_FRAGMENT_ID"
         private val sComponentsArray = LongSparseArray<ConfigPersistentComponent>()
-        private val NEXT_ID = AtomicLong(0)
     }
 }

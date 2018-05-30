@@ -10,7 +10,7 @@ import net.derohimat.footballschedule.injection.module.AppModule
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = arrayOf(AppModule::class))
+@Component(modules = [(AppModule::class)])
 interface AppComponent {
 
     @ApplicationContext
@@ -20,5 +20,5 @@ interface AppComponent {
 
     fun dataManager(): DataManager
 
-    fun pokemonApi(): FootBallApi
+    fun footballApi(): FootBallApi
 }

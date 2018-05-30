@@ -23,7 +23,7 @@ constructor(@ApplicationContext context: Context) {
 
     companion object {
 
-        val PREF_FILE_NAME = "football_pref_file"
+        const val PREF_FILE_NAME = "football_pref_file"
     }
 
 }

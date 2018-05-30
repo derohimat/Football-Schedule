@@ -20,14 +20,11 @@ android {
         targetSdkVersion 27
         versionCode 1
         versionName '0.1'
-
-        buildConfigField("String", "BASE_API_URL",
-                "\"${BaseApiUrl}\"")
-
-        buildConfigField("String", "TEST_API_KEY",
-                "\"${TestApiKey}\"")
-
         multiDexEnabled true
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "BASE_API_URL", "\"${BaseApiUrl}\"")
+        buildConfigField("String", "TEST_API_KEY", "\"${TestApiKey}\"")
     }
     buildTypes {
         release {
@@ -61,6 +58,31 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    sourceSets {
+        def commonTestDir = 'src/commonTest/java'
+        test {
+            java.srcDir commonTestDir
+        }
+        androidTest {
+            java.srcDir commonTestDir
+        }
+    }
+
+    testOptions {
+        unitTests {
+            returnDefaultValues = true
+        }
+    }
+
+    kotlin {
+        experimental {
+            coroutines "enable"
+        }
+    }
+    androidExtensions {
+        experimental = true
+    }
 }
 
 configurations.all {
@@ -78,6 +100,13 @@ dependencies {
     implementation networkLibs
     implementation rxJavaLibs
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    //    Anko
+    implementation "org.jetbrains.anko:anko:$anko_version"
+    implementation "org.jetbrains.anko:anko-sqlite:$anko_version"
+
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:0.19.2"
+    implementation "org.jetbrains.anko:anko-coroutines:$anko_version"
 
     implementation 'com.github.bumptech.glide:glide:3.7.0'
     implementation('com.github.bumptech.glide:okhttp3-integration:1.4.0') {
@@ -97,14 +126,27 @@ dependencies {
     releaseImplementation('com.github.ajitsing:sherlock-no-op:1.0.2@aar')
 
     implementation 'com.tspoon.traceur:traceur:1.0.1'
+    implementation 'com.aurelhubert:ahbottomnavigation:2.1.0'
 
     implementation "com.google.dagger:dagger:$versions.dagger"
     compileOnly 'org.glassfish:javax.annotation:10.0-b28' //Required by Dagger2
 
+    implementation 'com.miguelcatalan:materialsearchview:1.4.0'
+
     debugImplementation leakCannary
     releaseImplementation leakCannary
+    testImplementation leakCannary
 
     kapt "com.jakewharton:butterknife-compiler:$versions.butterKnife"
     kapt daggerCompiler
+    kaptTest daggerCompiler
+    kaptAndroidTest daggerCompiler
 
+    testImplementation unitTestLibs
+    androidTestImplementation androidTestsLibs
+}
+
+// Log out test results to console
+tasks.matching { it instanceof Test }.all {
+    testLogging.events = ["failed", "passed", "skipped"]
 }
